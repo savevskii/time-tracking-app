@@ -3,7 +3,6 @@ def call(boolean isRelease, String releaseVersion, String developmentVersion) {
     environment {
         DOCKER_REGISTRY = 'docker-registry-internal.netcetera.com/fsavevsk'
         IMAGE_NAME = 'time-tracking-app'
-        VERSION = ''
     }
 
     stage('Pre Flight') {

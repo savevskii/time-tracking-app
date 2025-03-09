@@ -1,6 +1,7 @@
 def utils
-def backendPipeline
-def isRelease, releaseVersion, developmentVersion
+
+DOCKER_REGISTRY = 'docker-registry-internal.netcetera.com/fsavevsk'
+IMAGE_NAME = 'time-tracking-app'
 
 pipeline {
 
@@ -15,9 +16,6 @@ pipeline {
 
     environment {
         BITBUCKET_USER = credentials('11d1c8ab-bef2-4ed4-b79d-eb8d3db3d9f2')
-        IS_RELEASE = "${params.RELEASE_BUILD}"
-        RELEASE_VERSION = "${params.RELEASE_VERSION}"
-        DEVELOPMENT_VERSION = "${params.DEVELOPMENT_VERSION}"
     }
 
     parameters {
@@ -34,21 +32,18 @@ pipeline {
                 script {
                     // Load scripts
                     utils = load 'jenkins/pipelines/shared/utils.groovy'
-                    backendPipeline = load 'jenkins/pipelines/ci/backendPipeline.groovy'
 
                     utils.bitbucketNotification("INPROGRESS")
                 }
             }
         }
 
-        stage('CI: Build & Test') {
-            parallel {
-                stage('Backend CI') {
-                    steps {
-                        script {
-                            backendPipeline(false,'0.0.1','0.0.2-SNAPSHOT')
-                        }
-                    }
+        stage('Maven Build & Unit Tests') {
+            steps {
+                script {
+                    sh "mvn -ntp --batch-mode clean install"
+
+                    junit allowEmptyResults: true, testResults: '**/target/surefire-reports/*.xml'
                 }
             }
         }
@@ -62,12 +57,43 @@ pipeline {
                         }
                     }
                 }
-                stage('UI Tests') {
-                    steps {
-                        script {
-                            sh 'echo "UI test executed successfully"'
-                        }
+            }
+        }
+
+        stage('Release Build') {
+            when {
+                allOf {
+                    branch "master"
+                    expression {
+                        return params.RELEASE_BUILD
                     }
+                }
+            }
+            steps {
+                script {
+                    sh """
+                       mvn --batch-mode -ntp \
+                       -Dusername=\"${env.BITBUCKET_USER_USR}\" \
+                       -Dpassword=\"${env.BITBUCKET_USER_PSW}\" \
+                       -DreleaseVersion=\"${params.RELEASE_VERSION}\" \
+                       -DdevelopmentVersion=\"${params.DEVELOPMENT_VERSION}\" \
+                       release:prepare release:perform
+                    """
+                }
+            }
+        }
+
+        stage('Build and Publish Docker Image') {
+            when {
+                branch 'master'
+            }
+            script {
+                steps {
+                    VERSION = sh(script: "mvn help:evaluate -Dexpression=project.version -q -DforceStdout", returnStdout: true).trim()
+                    IMAGE_TAG = params.RELEASE_BUILD ? "${params.RELEASE_VERSION}" : VERSION
+
+                    sh "docker build -t ${DOCKER_REGISTRY}/${IMAGE_NAME}:${IMAGE_TAG} -f jenkins/pipelines/docker/backend.Dockerfile"
+                    sh "docker push ${DOCKER_REGISTRY}/${IMAGE_NAME}:${IMAGE_TAG}"
                 }
             }
         }
@@ -88,7 +114,7 @@ pipeline {
                 allOf {
                     branch 'master'
                     expression {
-                        return IS_RELEASE
+                        return params.RELEASE_BUILD
                     }
                 }
             }
