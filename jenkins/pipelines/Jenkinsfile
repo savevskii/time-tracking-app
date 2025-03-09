@@ -87,9 +87,10 @@ pipeline {
             when {
                 branch 'master'
             }
-            script {
-                steps {
+            steps {
+                script {
                     VERSION = sh(script: "mvn help:evaluate -Dexpression=project.version -q -DforceStdout", returnStdout: true).trim()
+                    sh 'echo "Pom version is: $VERSION"'
                     IMAGE_TAG = params.RELEASE_BUILD ? "${params.RELEASE_VERSION}" : VERSION
 
                     sh "docker build -t ${DOCKER_REGISTRY}/${IMAGE_NAME}:${IMAGE_TAG} -f jenkins/pipelines/docker/backend.Dockerfile"
