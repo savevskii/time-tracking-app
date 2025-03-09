@@ -46,7 +46,7 @@ pipeline {
                 stage('Backend CI') {
                     steps {
                         script {
-                            backendPipeline(IS_RELEASE,'0.0.1','0.0.2-SNAPSHOT')
+                            backendPipeline(false,'0.0.1','0.0.2-SNAPSHOT')
                         }
                     }
                 }
