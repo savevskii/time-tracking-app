@@ -1,5 +1,6 @@
 def utils
 
+IS_RELEASE = params.RELEASE_BUILD && env.BRANCH_NAME == 'master'
 DOCKER_REGISTRY = 'docker-registry-internal.netcetera.com/fsavevsk'
 IMAGE_NAME = 'time-tracking-app'
 
@@ -62,12 +63,7 @@ pipeline {
 
         stage('Release Build') {
             when {
-                allOf {
-                    branch "master"
-                    expression {
-                        return params.RELEASE_BUILD
-                    }
-                }
+                expression { return IS_RELEASE }
             }
             steps {
                 script {
@@ -91,7 +87,7 @@ pipeline {
                 script {
                     VERSION = sh(script: "mvn help:evaluate -Dexpression=project.version -q -DforceStdout", returnStdout: true).trim()
                     sh 'echo "Pom version is: $VERSION"'
-                    IMAGE_TAG = params.RELEASE_BUILD ? "${params.RELEASE_VERSION}" : VERSION
+                    IMAGE_TAG = IS_RELEASE ? "${params.RELEASE_VERSION}" : VERSION
 
                     sh "docker build -t ${DOCKER_REGISTRY}/${IMAGE_NAME}:${IMAGE_TAG} ."
                     sh "docker push ${DOCKER_REGISTRY}/${IMAGE_NAME}:${IMAGE_TAG}"
@@ -112,12 +108,7 @@ pipeline {
 
         stage('CD: Deploy to Production') {
             when {
-                allOf {
-                    branch 'master'
-                    expression {
-                        return params.RELEASE_BUILD
-                    }
-                }
+                expression { return IS_RELEASE }
             }
             steps {
                 script {
