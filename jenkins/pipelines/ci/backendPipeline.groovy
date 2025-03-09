@@ -16,7 +16,7 @@ def call(boolean isRelease, String releaseVersion, String developmentVersion) {
 
     stage('Maven Build & Unit Tests') {
         steps {
-            scripts {
+            script {
                 sh "mvn -ntp --batch-mode clean install"
 
                 junit allowEmptyResults: true, testResults: '**/target/surefire-reports/*.xml'
@@ -51,7 +51,7 @@ def call(boolean isRelease, String releaseVersion, String developmentVersion) {
         when {
             branch 'master'
         }
-        scripts {
+        script {
             steps {
                 sh "docker build -t ${DOCKER_REGISTRY}/${IMAGE_NAME}:${VERSION} -f jenkins/pipelines/docker/backend.Dockerfile"
                 sh "docker push ${DOCKER_REGISTRY}/${IMAGE_NAME}:${VERSION}"

@@ -1,5 +1,6 @@
 def utils
 def backendPipeline
+def isRelease, releaseVersion, developmentVersion
 
 pipeline {
 
@@ -45,7 +46,7 @@ pipeline {
                 stage('Backend CI') {
                     steps {
                         script {
-                            backendPipeline(IS_RELEASE,RELEASE_VERSION,DEVELOPMENT_VERSION)
+                            backendPipeline(IS_RELEASE,'0.0.1','0.0.2-SNAPSHOT')
                         }
                     }
                 }
