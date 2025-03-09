@@ -93,7 +93,7 @@ pipeline {
                     sh 'echo "Pom version is: $VERSION"'
                     IMAGE_TAG = params.RELEASE_BUILD ? "${params.RELEASE_VERSION}" : VERSION
 
-                    sh "docker build -t ${DOCKER_REGISTRY}/${IMAGE_NAME}:${IMAGE_TAG} -f jenkins/pipelines/docker/backend.Dockerfile"
+                    sh "docker build -t ${DOCKER_REGISTRY}/${IMAGE_NAME}:${IMAGE_TAG} ."
                     sh "docker push ${DOCKER_REGISTRY}/${IMAGE_NAME}:${IMAGE_TAG}"
                 }
             }
