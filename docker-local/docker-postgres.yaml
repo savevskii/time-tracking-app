@@ -3,8 +3,8 @@ services:
     image: postgres:17
     container_name: postgres-db
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: secret
+      POSTGRES_USER: time-tracking-admin
+      POSTGRES_PASSWORD: topsecret
       POSTGRES_DB: timetracker
     ports:
       - "5432:5432"

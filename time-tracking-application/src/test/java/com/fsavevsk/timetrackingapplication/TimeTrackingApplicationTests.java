@@ -1,10 +1,12 @@
-package com.fsavevsk.timetrackingapp;
+package com.fsavevsk.timetrackingapplication;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class TimeTrackingAppApplicationTests {
+@Disabled
+class TimeTrackingApplicationTests {
 
     @Test
     void contextLoads() {

@@ -3,9 +3,12 @@ spring:
     name: time-tracking-app
   datasource:
     url: jdbc:postgresql://localhost:5432/timetracker
-    username: postgres
-    password: secret
+    username: time-tracking-admin
+    password: topsecret
   jpa:
     hibernate:
       ddl-auto: update
     show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
