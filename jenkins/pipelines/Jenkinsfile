@@ -1,3 +1,6 @@
+def utils
+def backendPipeline
+
 pipeline {
 
     agent {
@@ -27,10 +30,11 @@ pipeline {
 
         stage('Pre Flight') {
             steps {
-                checkout scm
-                echo "Building branch: ${env.BRANCH_NAME}, Release mode: ${IS_RELEASE}"
                 script {
-                    def utils = load 'jenkins/pipelines/shared/utils.groovy'
+                    // Load scripts
+                    utils = load 'jenkins/pipelines/shared/utils.groovy'
+                    backendPipeline = load 'jenkins/pipelines/ci/backendPipeline.groovy'
+
                     utils.bitbucketNotification("INPROGRESS")
                 }
             }
@@ -41,7 +45,6 @@ pipeline {
                 stage('Backend CI') {
                     steps {
                         script {
-                            load 'jenkins/pipelines/ci/backendPipeline.groovy'
                             backendPipeline(IS_RELEASE,RELEASE_VERSION,DEVELOPMENT_VERSION)
                         }
                     }
