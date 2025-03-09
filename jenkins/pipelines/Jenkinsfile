@@ -122,6 +122,7 @@ pipeline {
     post {
         always {
             script {
+                currentBuild.result = currentBuild.result ?: 'SUCCESS'
                 utils.bitbucketNotification(currentBuild.result)
             }
         }
