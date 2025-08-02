@@ -5,6 +5,14 @@ spring:
     url: jdbc:postgresql://localhost:5432/timetracker
     username: time-tracking-admin
     password: topsecret
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:8080/realms/dev
+  threads:
+    virtual:
+      enabled: true
   jpa:
     hibernate:
       ddl-auto: update
@@ -12,3 +20,6 @@ spring:
     properties:
       hibernate:
         format_sql: true
+
+server:
+  port: 9191

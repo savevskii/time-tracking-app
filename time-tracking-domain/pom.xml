@@ -9,8 +9,8 @@
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
 
-	<artifactId>time-tracking-core</artifactId>
-	<name>Time Tracking Core</name>
-	<description>This is a core module, containing domain classes (core bussiness logic) and is shared between all modules.</description>
+	<artifactId>time-tracking-domain</artifactId>
+	<name>Time Tracking Domain</name>
+	<description>This is a domain module, containing domain classes (core bussiness logic) and is shared between all modules.</description>
 
 </project>

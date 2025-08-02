@@ -21,13 +21,19 @@
 
     <modules>
         <module>time-tracking-application</module>
-        <module>time-tracking-core</module>
+        <module>time-tracking-domain</module>
         <module>time-tracking-persistence</module>
+        <module>time-tracking-api</module>
     </modules>
 
     <properties>
         <nca.project.id>nca-341-2</nca.project.id>
-        <spring-boot.version>3.4.3</spring-boot.version>
+        <spring-boot.version>3.5.3</spring-boot.version>
+        <keycloak-admin-client.version>26.0.4</keycloak-admin-client.version>
+        <mapstruct.version>1.6.3</mapstruct.version>
+        <postgresql.version>42.7.7</postgresql.version>
+        <lombok.version>1.18.36</lombok.version>
+        <lombok-mapstruct-binding.version>0.2.0</lombok-mapstruct-binding.version>
     </properties>
 
     <dependencies>
@@ -35,6 +41,7 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
+            <version>${lombok.version}</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>
@@ -49,16 +56,31 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
+            <dependency>
+                <groupId>org.keycloak</groupId>
+                <artifactId>keycloak-admin-client</artifactId>
+                <version>${keycloak-admin-client.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.mapstruct</groupId>
+                <artifactId>mapstruct</artifactId>
+                <version>${mapstruct.version}</version>
+            </dependency>
 
             <!-- Project dependencies -->
             <dependency>
                 <groupId>com.fsavevsk</groupId>
-                <artifactId>time-tracking-core</artifactId>
+                <artifactId>time-tracking-domain</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.fsavevsk</groupId>
                 <artifactId>time-tracking-persistence</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fsavevsk</groupId>
+                <artifactId>time-tracking-api</artifactId>
                 <version>${project.version}</version>
             </dependency>
         </dependencies>
@@ -78,6 +100,30 @@
                                 <artifactId>lombok</artifactId>
                             </exclude>
                         </excludes>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <configuration>
+                        <parameters>true</parameters>
+                        <annotationProcessorPaths>
+                            <path>
+                                <groupId>org.mapstruct</groupId>
+                                <artifactId>mapstruct-processor</artifactId>
+                                <version>${mapstruct.version}</version>
+                            </path>
+                            <path>
+                                <groupId>org.projectlombok</groupId>
+                                <artifactId>lombok</artifactId>
+                                <version>${lombok.version}</version>
+                            </path>
+                            <path>
+                                <groupId>org.projectlombok</groupId>
+                                <artifactId>lombok-mapstruct-binding</artifactId>
+                                <version>${lombok-mapstruct-binding.version}</version>
+                            </path>
+                        </annotationProcessorPaths>
                     </configuration>
                 </plugin>
             </plugins>
