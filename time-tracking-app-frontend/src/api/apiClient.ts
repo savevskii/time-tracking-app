@@ -1,24 +1,23 @@
-import axios from "axios";
-import useKeycloak from '../hooks/useKeycloak';
+import axios from 'axios';
+import keycloak from '../auth/keycloak';
 
-const apiBaseUrl = "/api"; // adjust to match backend path
+const api = axios.create({
+    baseURL: 'http://localhost:9191',
+    headers: {
+        'Content-Type': 'application/json',
+    },
+});
 
-export const useApiClient = () => {
-    const { keycloak } = useKeycloak();
-
-    const instance = axios.create({
-        baseURL: apiBaseUrl,
-        headers: {
-            "Content-Type": "application/json",
-        },
-    });
-
-    instance.interceptors.request.use((config) => {
-        if (keycloak?.token) {
-            config.headers["Authorization"] = `Bearer ${keycloak.token}`;
+// Request interceptor to add token
+api.interceptors.request.use(
+    (config) => {
+        if (keycloak?.authenticated && keycloak.token) {
+            config.headers = config.headers || {};
+            config.headers['Authorization'] = `Bearer ${keycloak.token}`;
         }
         return config;
-    });
+    },
+    (error) => Promise.reject(error)
+);
 
-    return instance;
-};
+export default api;

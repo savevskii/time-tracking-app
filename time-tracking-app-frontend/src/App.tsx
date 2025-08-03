@@ -1,29 +1,33 @@
-import './App.css'
-import HomePage from './pages/HomePage'
-import { KeycloakProvider } from './context/KeycloakContext'
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
-import Layout from './components/Layout'
-import ErrorBoundary from './context/ErrorBoundary'
+// src/App.tsx
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import Home from './pages/Home';
+import Dashboard from './pages/Dashboard';
+import PrivateRoute from './auth/PrivateRoute';
+import Layout from './components/Layout';
+import { AuthProvider } from './auth/AuthProvider';
 
-function App() {
+export default function App() {
     return (
-        <KeycloakProvider>
-            <BrowserRouter>
-                <ErrorBoundary>
-                    <Routes>
-                        <Route
-                            path="/"
-                            element={
-                                <Layout>
-                                    <HomePage />
-                                </Layout>
-                            }
-                        />
-                    </Routes>
-                </ErrorBoundary>
-            </BrowserRouter>
-        </KeycloakProvider>
-    )
+        <AuthProvider>
+            <Router>
+                <div className="min-h-screen w-full bg-gray-50">
+                    <Layout>
+                        <div className="container mx-auto px-4">
+                            <Routes>
+                                <Route path="/" element={<Home />} />
+                                <Route
+                                    path="/dashboard"
+                                    element={
+                                        <PrivateRoute>
+                                            <Dashboard />
+                                        </PrivateRoute>
+                                    }
+                                />
+                            </Routes>
+                        </div>
+                    </Layout>
+                </div>
+            </Router>
+        </AuthProvider>
+    );
 }
-
-export default App
