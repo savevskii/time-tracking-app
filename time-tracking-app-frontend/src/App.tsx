@@ -1,22 +1,29 @@
-import React from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Home from "./pages/Home";
-import Dashboard from "./pages/Dashboard";
-import Login from "./pages/Login";
-import { AuthProvider } from "./auth/AuthProvider";
+import './App.css'
+import HomePage from './pages/HomePage'
+import { KeycloakProvider } from './context/KeycloakContext'
+import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import Layout from './components/Layout'
+import ErrorBoundary from './context/ErrorBoundary'
 
-const App = () => {
+function App() {
     return (
-        <AuthProvider>
-            <Router>
-                <Routes>
-                    <Route path="/" element={<Home />} />
-                    <Route path="/login" element={<Login />} />
-                    <Route path="/dashboard" element={<Dashboard />} />
-                </Routes>
-            </Router>
-        </AuthProvider>
-    );
-};
+        <KeycloakProvider>
+            <BrowserRouter>
+                <ErrorBoundary>
+                    <Routes>
+                        <Route
+                            path="/"
+                            element={
+                                <Layout>
+                                    <HomePage />
+                                </Layout>
+                            }
+                        />
+                    </Routes>
+                </ErrorBoundary>
+            </BrowserRouter>
+        </KeycloakProvider>
+    )
+}
 
-export default App;
+export default App
