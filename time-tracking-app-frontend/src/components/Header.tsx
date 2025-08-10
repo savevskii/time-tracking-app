@@ -14,8 +14,9 @@ export default function Header() {
             <h1 className="text-xl font-bold">TrackLight</h1>
             <nav className="space-x-4">
                 <Link to="/" className={`${linkBase} ${isActive('/')}`}>Home</Link>
-                <Link to="/dashboard" className={`${linkBase} ${isActive('/dashboard')}`}>Dashboard</Link>
                 <Link to="/projects" className={`${linkBase} ${isActive('/projects')}`}>Projects</Link>
+                <Link to="/entries" className={`${linkBase} ${isActive('/entries')}`}>Entries</Link>
+                <Link to="/dashboard" className={`${linkBase} ${isActive('/dashboard')}`}>Dashboard</Link>
                 <button
                     onClick={logout}
                     className="ml-4 bg-blue-500 px-3 py-1 rounded hover:bg-blue-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70"

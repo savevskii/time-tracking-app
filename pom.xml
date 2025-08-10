@@ -21,9 +21,7 @@
 
     <modules>
         <module>time-tracking-application</module>
-        <module>time-tracking-domain</module>
         <module>time-tracking-persistence</module>
-        <module>time-tracking-api</module>
     </modules>
 
     <properties>
@@ -70,17 +68,7 @@
             <!-- Project dependencies -->
             <dependency>
                 <groupId>com.fsavevsk</groupId>
-                <artifactId>time-tracking-domain</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.fsavevsk</groupId>
                 <artifactId>time-tracking-persistence</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.fsavevsk</groupId>
-                <artifactId>time-tracking-api</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
