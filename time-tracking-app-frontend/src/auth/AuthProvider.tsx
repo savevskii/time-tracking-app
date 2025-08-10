@@ -3,33 +3,30 @@ import keycloak from './keycloak';
 
 interface AuthContextType {
     isAuthenticated: boolean;
-    token: string | undefined;
+    token?: string;
     logout: () => void;
 }
 
 export const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-export const AuthProvider = ({ children }: { children: ReactNode }) => {
+export function AuthProvider({ children }: { children: ReactNode }) {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [token, setToken] = useState<string | undefined>(undefined);
-    const hasInitialized = useRef(false);
+    const didInit = useRef(false);
 
     useEffect(() => {
-        if (!hasInitialized.current) {
-            hasInitialized.current = true;
+        if (didInit.current) return;
+        didInit.current = true;
 
-            keycloak
-                .init({ onLoad: 'login-required' })
-                .then((authenticated) => {
-                    if (authenticated) {
-                        setIsAuthenticated(true);
-                        setToken(keycloak.token);
-                    }
-                })
-                .catch((err) => {
-                    console.error('Keycloak init failed', err);
-                });
-        }
+        keycloak
+            .init({ onLoad: 'login-required' })
+            .then((auth) => {
+                if (auth) {
+                    setIsAuthenticated(true);
+                    setToken(keycloak.token);
+                }
+            })
+            .catch((err) => console.error('Keycloak init failed', err));
     }, []);
 
     const logout = () => keycloak.logout();
@@ -39,4 +36,4 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
             {children}
         </AuthContext.Provider>
     );
-};
+}

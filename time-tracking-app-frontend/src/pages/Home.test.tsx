@@ -1,13 +1,14 @@
 import { render, screen } from '@testing-library/react';
-import { BrowserRouter } from 'react-router-dom';
+import { MemoryRouter } from 'react-router-dom';
 import Home from './Home';
 
-test('renders welcome text', () => {
-    render(
-        <BrowserRouter>
-            <Home />
-        </BrowserRouter>
-    );
-
-    expect(screen.getByText(/Welcome to SolidTime/i)).toBeInTheDocument();
+describe('HomePage', () => {
+    it('renders a welcome text', () => {
+        render(
+            <MemoryRouter initialEntries={['/']}>
+                <Home />
+            </MemoryRouter>
+        );
+        expect(screen.getByText(/Welcome to TrackLight/i)).toBeInTheDocument();
+    });
 });

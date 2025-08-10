@@ -1,9 +1,17 @@
-import '@testing-library/jest-dom';
+import '@testing-library/jest-dom/vitest';
+import { server } from '@/mocks/server';
+import { resetProjects } from '@/mocks/handlers';
+import { vi } from 'vitest';
 
-const originalConsoleError = console.error;
-const jsDomCssError = 'Error: Could not parse CSS stylesheet';
-console.error = (...params) => {
-    if (!params.find((p) => p.toString().includes(jsDomCssError))) {
-        originalConsoleError(...params);
-    }
-};
+// MSW lifecycle
+beforeAll(() => server.listen({ onUnhandledRequest: 'error' }));
+afterEach(() => {
+    server.resetHandlers();
+    resetProjects();               // <- reset in-memory DB after each test
+});
+afterAll(() => server.close());
+
+// Mock Keycloak module so axios interceptor doesn't blow up in tests
+vi.mock('@/auth/keycloak', () => ({
+    default: { authenticated: false, token: undefined },
+}));

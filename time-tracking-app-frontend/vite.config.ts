@@ -5,15 +5,14 @@ import path from 'path';
 
 export default defineConfig({
     plugins: [react(), tailwindcss()],
-    test: {
-        globals: true,
-        environment: 'jsdom',
-        css: true,
-        setupFiles: './src/test/setup.ts'
-    },
     resolve: {
         alias: {
             "@": path.resolve(__dirname, "src"),
         },
+    },
+    test: {
+        globals: true,
+        environment: 'jsdom',
+        setupFiles: './src/test/setup.ts',
     }
 });
