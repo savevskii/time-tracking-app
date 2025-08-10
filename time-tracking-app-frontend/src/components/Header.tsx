@@ -14,6 +14,9 @@ export default function Header() {
                 <Link to="/dashboard" className="hover:underline">
                     Dashboard
                 </Link>
+                <Link to="/projects" className="hover:underline">
+                    Projects
+                </Link>
                 <button
                     onClick={logout}
                     className="ml-4 bg-blue-500 px-3 py-1 rounded hover:bg-blue-600"

@@ -1,14 +1,10 @@
 package com.fsavevsk.timetracking.domain.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Getter
-@Setter
 public class Project {
 
     private Long id;

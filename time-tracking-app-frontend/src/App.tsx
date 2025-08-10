@@ -1,7 +1,7 @@
-// src/App.tsx
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Home from './pages/Home';
 import Dashboard from './pages/Dashboard';
+import Projects from './pages/Projects';
 import PrivateRoute from './auth/PrivateRoute';
 import Layout from './components/Layout';
 import { AuthProvider } from './auth/AuthProvider';
@@ -20,6 +20,14 @@ export default function App() {
                                     element={
                                         <PrivateRoute>
                                             <Dashboard />
+                                        </PrivateRoute>
+                                    }
+                                />
+                                <Route
+                                    path="/projects"
+                                    element={
+                                        <PrivateRoute>
+                                            <Projects />
                                         </PrivateRoute>
                                     }
                                 />

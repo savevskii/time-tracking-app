@@ -12,6 +12,10 @@
     "types": [
       "vitest/globals"
     ],
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"]
+    },
     /* Bundler mode */
     "moduleResolution": "bundler",
     "allowImportingTsExtensions": true,
