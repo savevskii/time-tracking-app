@@ -13,14 +13,18 @@ export interface Summary {
 export interface TimeEntry {
     id: number;
     projectId: number;
-    projectName?: string;
-    date: string;         // ISO date: "2025-08-10"
-    start: string;        // "HH:mm"
-    end: string;          // "HH:mm"
+    projectName: string;
+    title: string;
+    startTime: string; // ISO LocalDateTime e.g. '2025-08-10T09:00'
+    endTime: string;   // ISO LocalDateTime
     durationMinutes: number;
-    description?: string;
+    description?: string | null;
 }
 
-export type NewTimeEntry = Omit<TimeEntry, 'id' | 'durationMinutes' | 'projectName'> & {
-    durationMinutes?: number; // optional if backend computes it
-};
+export interface CreateTimeEntryRequest {
+    projectId: number;
+    title: string;
+    startTime: string; // 'YYYY-MM-DDTHH:mm' (from <input type="datetime-local" />)
+    endTime: string;
+    description?: string | null;
+}
