@@ -28,3 +28,19 @@ export interface CreateTimeEntryRequest {
     endTime: string;
     description?: string | null;
 }
+
+export interface AdminOverviewResponse {
+    totalProjects: number;
+    hoursToday: number;
+    hoursThisWeek: number;
+    topProjectsThisWeek: Array<{ projectId: number; projectName: string; hours: number }>;
+}
+
+export interface ProjectSummaryRow {
+    projectId: number;
+    projectName: string;
+    hoursWeek: number;
+    hoursMonth: number;
+    entriesWeek: number;
+    lastEntryAt: string | null; // ISO
+}

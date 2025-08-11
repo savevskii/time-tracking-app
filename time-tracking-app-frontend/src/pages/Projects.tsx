@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import axios from '@/api/apiClient';
+import { listProjects, createProject, deleteProject } from '@/api/projects';
 import { Input, Button } from '@/components/ui';
 import type { Project } from '@/types';
 
@@ -16,7 +16,7 @@ export default function Projects() {
         setLoading(true);
         setError(null);
         try {
-            const { data } = await axios.get<Project[]>('/api/projects');
+            const data = await listProjects();
             setProjects(data);
         } catch {
             setError('Failed to load projects');
@@ -30,7 +30,7 @@ export default function Projects() {
         setLoading(true);
         setError(null);
         try {
-            await axios.post('/api/projects', { name, description });
+            await createProject(name, description);
             setName('');
             setDescription('');
             fetchProjects();
@@ -44,10 +44,14 @@ export default function Projects() {
     const handleDelete = async (id: number) => {
         setLoading(true);
         setError(null);
+
+        const newProjects = projects.filter(project => project.id !== id);
+        setProjects(newProjects);
+
         try {
-            await axios.delete(`/api/projects/${id}`);
-            fetchProjects();
+            await deleteProject(id);
         } catch {
+            setProjects(projects);
             setError('Failed to delete project');
         } finally {
             setLoading(false);
