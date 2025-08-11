@@ -82,6 +82,30 @@
                     </execution>
                 </executions>
             </plugin>
+
+            <plugin>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>unpack-frontend-assets</id>
+                        <phase>process-resources</phase>
+                        <goals><goal>unpack</goal></goals>
+                        <configuration>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>com.fsavevsk</groupId>
+                                    <artifactId>time-tracking-frontend</artifactId>
+                                    <version>${project.version}</version>
+                                    <classifier>assets</classifier>
+                                    <type>jar</type>
+                                    <overWrite>true</overWrite>
+                                    <outputDirectory>${project.build.outputDirectory}/static</outputDirectory>
+                                </artifactItem>
+                            </artifactItems>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
         <finalName>time-tracking-app</finalName>
     </build>

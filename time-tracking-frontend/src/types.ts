@@ -44,3 +44,11 @@ export interface ProjectSummaryRow {
     entriesWeek: number;
     lastEntryAt: string | null; // ISO
 }
+
+export type Role = 'admin' | 'user';
+
+export interface TokenParsedMinimal {
+    realm_access?: {
+        roles?: string[];
+    };
+}

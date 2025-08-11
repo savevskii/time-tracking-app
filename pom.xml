@@ -22,6 +22,7 @@
     <modules>
         <module>time-tracking-application</module>
         <module>time-tracking-persistence</module>
+        <module>time-tracking-frontend</module>
     </modules>
 
     <properties>
@@ -30,6 +31,7 @@
         <keycloak-admin-client.version>26.0.4</keycloak-admin-client.version>
         <mapstruct.version>1.6.3</mapstruct.version>
         <postgresql.version>42.7.7</postgresql.version>
+        <frontend-maven-plugin.version>1.15.1</frontend-maven-plugin.version>
         <lombok.version>1.18.36</lombok.version>
         <lombok-mapstruct-binding.version>0.2.0</lombok-mapstruct-binding.version>
     </properties>
@@ -76,6 +78,11 @@
                 <artifactId>time-tracking-application</artifactId>
                 <version>${project.version}</version>
             </dependency>
+            <dependency>
+                <groupId>com.fsavevsk</groupId>
+                <artifactId>time-tracking-frontend</artifactId>
+                <version>${project.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -118,6 +125,11 @@
                             </path>
                         </annotationProcessorPaths>
                     </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>com.github.eirslett</groupId>
+                    <artifactId>frontend-maven-plugin</artifactId>
+                    <version>${frontend-maven-plugin.version}</version>
                 </plugin>
             </plugins>
         </pluginManagement>
