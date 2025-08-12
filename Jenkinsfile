@@ -1,5 +1,3 @@
-def utils
-
 IS_RELEASE = params.RELEASE_BUILD && env.BRANCH_NAME == 'master'
 DOCKER_REGISTRY = 'docker-registry-internal.netcetera.com/fsavevsk'
 IMAGE_NAME = 'time-tracking-app'
@@ -28,13 +26,10 @@ pipeline {
 
     stages {
 
-        stage('Pre Flight') {
+        stage('Bitbucket Notification') {
             steps {
                 script {
-                    // Load scripts
-                    utils = load 'jenkins/pipelines/shared/utils.groovy'
-
-                    utils.bitbucketNotification("INPROGRESS")
+                    bitbucketNotification("INPROGRESS")
                 }
             }
         }
@@ -49,14 +44,10 @@ pipeline {
             }
         }
 
-        stage('Testing') {
-            parallel {
-                stage('Integration Tests') {
-                    steps {
-                        script {
-                            sh 'echo "Integration tests executed successfully"'
-                        }
-                    }
+        stage('Integration Tests') {
+            steps {
+                script {
+                    sh 'echo "Integration tests executed successfully"'
                 }
             }
         }
@@ -123,8 +114,23 @@ pipeline {
         always {
             script {
                 currentBuild.result = currentBuild.result ?: 'SUCCESS'
-                utils.bitbucketNotification(currentBuild.result)
+                bitbucketNotification(currentBuild.result)
             }
         }
     }
+}
+
+void bitbucketNotification(String status) {
+    notifyBitbucket( \
+             buildName: "${JOB_NAME}#${BUILD_NUMBER}",                  \
+             buildStatus: status,                  \
+             commitSha1: '',                  \
+             considerUnstableAsSuccess: false,                  \
+             credentialsId: '11d1c8ab-bef2-4ed4-b79d-eb8d3db3d9f2',                  \
+             disableInprogressNotification: false,                  \
+             ignoreUnverifiedSSLPeer: false,                  \
+             includeBuildNumberInKey: false,                  \
+             prependParentProjectKey: false,                  \
+             projectKey: '',                  \
+             stashServerBaseUrl: 'https://extranet.netcetera.biz/bitbucket')
 }

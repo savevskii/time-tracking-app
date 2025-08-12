@@ -20,7 +20,7 @@ services:
       KEYCLOAK_ADMIN_PASSWORD: secret
       KEYCLOAK_EXTRA_ARGS: --import-realm
     volumes:
-      - ./infra/keycloak:/opt/bitnami/keycloak/data/import
+      - ./config:/opt/bitnami/keycloak/data/import
 
 volumes:
   postgres_data:
