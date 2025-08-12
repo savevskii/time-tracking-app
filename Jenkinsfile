@@ -39,7 +39,11 @@ pipeline {
                 script {
                     sh "mvn -B -ntp clean install"
 
+                    // Spring boot unit tests result
                     junit allowEmptyResults: true, testResults: '**/target/surefire-reports/*.xml'
+
+                    // React unit tests result
+                    junit allowEmptyResults: true, testResults: '**/test-results/*.xml'
                 }
             }
         }
