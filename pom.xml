@@ -20,9 +20,9 @@
     <url>https://extranet.netcetera.biz/bitbucket/scm/~fsavevsk/time-tracking-app.git</url>
 
     <modules>
-        <module>time-tracking-application</module>
-        <module>time-tracking-persistence</module>
         <module>time-tracking-frontend</module>
+        <module>time-tracking-persistence</module>
+        <module>time-tracking-application</module>
     </modules>
 
     <properties>

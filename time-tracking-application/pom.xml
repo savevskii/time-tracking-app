@@ -51,6 +51,12 @@
             <groupId>com.fsavevsk</groupId>
             <artifactId>time-tracking-persistence</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.fsavevsk</groupId>
+            <artifactId>time-tracking-frontend</artifactId>
+            <classifier>web-static</classifier>
+            <scope>runtime</scope>
+        </dependency>
 
         <!-- Testing: JUnit, Mockito -->
         <dependency>
@@ -96,7 +102,7 @@
                                     <groupId>com.fsavevsk</groupId>
                                     <artifactId>time-tracking-frontend</artifactId>
                                     <version>${project.version}</version>
-                                    <classifier>assets</classifier>
+                                    <classifier>web-static</classifier>
                                     <type>jar</type>
                                     <overWrite>true</overWrite>
                                     <outputDirectory>${project.build.outputDirectory}/static</outputDirectory>

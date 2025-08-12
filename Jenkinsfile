@@ -37,7 +37,7 @@ pipeline {
         stage('Maven Build & Unit Tests') {
             steps {
                 script {
-                    sh "mvn -ntp --batch-mode clean install"
+                    sh "mvn -B -ntp clean install"
 
                     junit allowEmptyResults: true, testResults: '**/target/surefire-reports/*.xml'
                 }
@@ -59,7 +59,7 @@ pipeline {
             steps {
                 script {
                     sh """
-                       mvn --batch-mode -ntp \
+                       mvn -B -ntp \
                        -Dusername=\"${env.BITBUCKET_USER_USR}\" \
                        -Dpassword=\"${env.BITBUCKET_USER_PSW}\" \
                        -DreleaseVersion=\"${params.RELEASE_VERSION}\" \
