@@ -81,6 +81,7 @@
             <dependency>
                 <groupId>com.fsavevsk</groupId>
                 <artifactId>time-tracking-frontend</artifactId>
+                <classifier>web-static</classifier>
                 <version>${project.version}</version>
             </dependency>
         </dependencies>
