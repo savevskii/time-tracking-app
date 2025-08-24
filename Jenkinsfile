@@ -15,6 +15,7 @@ pipeline {
 
     environment {
         BITBUCKET_USER = credentials('11d1c8ab-bef2-4ed4-b79d-eb8d3db3d9f2')
+        TESTCONTAINERS_RYUK_DISABLED = 'true'
     }
 
     parameters {
