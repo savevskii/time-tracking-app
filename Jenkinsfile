@@ -38,7 +38,7 @@ pipeline {
         stage('Maven Build & Unit Tests') {
             steps {
                 script {
-                    sh "mvn -B -ntp clean package"
+                    sh "mvn -B -ntp clean install -DskipITs"
 
                     // Spring boot unit tests result
                     junit allowEmptyResults: true, testResults: '**/target/surefire-reports/*.xml'
