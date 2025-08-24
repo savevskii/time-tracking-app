@@ -1,7 +1,7 @@
 import { http, HttpResponse } from 'msw';
 
 export const dashboardHandlers = [
-    http.get('*/api/admin/overview', () =>
+    http.get('*/api/admin/reports/overview', () =>
         HttpResponse.json({
             totalProjects: 12,
             hoursToday: 18.5,
@@ -13,7 +13,7 @@ export const dashboardHandlers = [
         })
     ),
 
-    http.get('*/api/admin/projects/summary', () => {
+    http.get('*/api/admin/reports/projects', () => {
         // could inspect searchParams if you like
         return HttpResponse.json([
             {

@@ -19,7 +19,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @DataJpaTest
 @Import(PostgresTestConfig.class)
 @Transactional
-class TimeEntryRepositoryTest {
+class TimeEntryRepositoryIT {
 
     @Autowired
     TimeEntryRepository timeEntryRepository;

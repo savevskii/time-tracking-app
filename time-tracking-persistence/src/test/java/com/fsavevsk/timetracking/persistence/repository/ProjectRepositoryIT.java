@@ -15,7 +15,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @DataJpaTest
 @Import(PostgresTestConfig.class)
 @Transactional
-public class ProjectRepositoryTest {
+public class ProjectRepositoryIT {
 
     @Autowired
     ProjectRepository projectRepository;

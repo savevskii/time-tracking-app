@@ -20,8 +20,8 @@ describe('Dashboard (admin)', () => {
     });
 
     it('shows error when overview fails', async () => {
-        // Make ONLY /api/admin/overview fail; summary table can still load or not—doesn’t matter
-        server.use(http.get('*/api/admin/overview', () => HttpResponse.error()));
+        // Make ONLY /api/admin/reports/overview fail; summary table can still load or not—doesn’t matter
+        server.use(http.get('*/api/admin/reports/overview', () => HttpResponse.error()));
 
         renderWithProviders(<Dashboard />);
 

@@ -51,7 +51,10 @@ pipeline {
         stage('Integration Tests') {
             steps {
                 script {
-                    sh 'echo "Integration tests executed successfully"'
+                    sh "mvn -B -ntp failsafe:integration-test failsafe:verify"
+
+                    // integration test results
+                    junit allowEmptyResults: true, testResults: '**/target/failsafe-reports/*.xml'
                 }
             }
         }
