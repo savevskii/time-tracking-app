@@ -38,7 +38,7 @@ pipeline {
         stage('Unit Tests') {
             steps {
                 script {
-                    sh "mvn -B -ntp clean test"
+                    sh "mvn -B -ntp clean test -DskipFrontendAssets=true"
 
                     // Spring boot unit tests result
                     junit allowEmptyResults: true, testResults: '**/target/surefire-reports/*.xml'
@@ -65,7 +65,7 @@ pipeline {
                 expression { return !IS_RELEASE }
             }
             steps {
-                sh "mvn -B -ntp -DskipTests package"
+                sh "mvn -B -ntp -DskipTests -DskipITs package"
             }
         }
 
