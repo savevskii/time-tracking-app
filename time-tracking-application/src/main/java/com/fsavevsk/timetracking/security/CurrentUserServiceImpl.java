@@ -8,7 +8,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class CurrentUserServiceImpl implements CurrentUserService {
@@ -57,15 +59,15 @@ public class CurrentUserServiceImpl implements CurrentUserService {
         return null;
     }
 
-    @SuppressWarnings("unchecked")
     private Set<String> extractRoles(Jwt jwt) {
-        try {
-            var realmAccess = (java.util.Map<String, Object>) jwt.getClaim("realm_access");
-            var roles = (java.util.List<String>) realmAccess.get("roles");
-            return new HashSet<>(roles);
-        } catch (Exception ignored) {
-            return Collections.emptySet();
+        var realm = jwt.getClaimAsMap("realm_access");
+        if (realm == null) return Collections.emptySet();
+
+        Object roles = realm.get("roles");
+        if (roles instanceof List<?> list) {
+            return list.stream().map(String::valueOf).collect(Collectors.toCollection(HashSet::new));
         }
+        return Collections.emptySet();
     }
 }
 

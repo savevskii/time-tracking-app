@@ -1,7 +1,8 @@
-package com.fsavevsk.timetracking.api.controller;
+package com.fsavevsk.timetracking.unit.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.fsavevsk.timetracking.api.controller.TimeEntryController;
 import com.fsavevsk.timetracking.api.dto.CreateTimeEntryRequest;
 import com.fsavevsk.timetracking.api.dto.TimeEntryResponse;
 import com.fsavevsk.timetracking.api.exception.GlobalExceptionHandler;
@@ -37,7 +38,7 @@ class TimeEntryControllerTest {
     private MockMvc mvc;
 
     @Autowired
-    private ObjectMapper om;;
+    private ObjectMapper om;
 
     @BeforeEach
     void setup() {
@@ -45,8 +46,7 @@ class TimeEntryControllerTest {
     }
 
     @Nested
-    @DisplayName("POST /api/time-entries")
-    class CreateEntry {
+    class CreateEntryTests {
         @Test
         @DisplayName("returns 200 and body when valid")
         void create_ok() throws Exception {

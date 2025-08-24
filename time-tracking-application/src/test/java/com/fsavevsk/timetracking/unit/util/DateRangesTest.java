@@ -1,5 +1,6 @@
-package com.fsavevsk.timetracking.util;
+package com.fsavevsk.timetracking.unit.util;
 
+import com.fsavevsk.timetracking.util.DateRanges;
 import org.junit.jupiter.api.Test;
 
 import java.time.*;

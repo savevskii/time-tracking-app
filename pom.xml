@@ -35,6 +35,7 @@
         <lombok.version>1.18.36</lombok.version>
         <lombok-mapstruct-binding.version>0.2.0</lombok-mapstruct-binding.version>
         <mockito.version>5.17.0</mockito.version>
+        <postgresql-testcontainers.version>1.21.3</postgresql-testcontainers.version>
     </properties>
 
     <dependencies>
@@ -66,6 +67,12 @@
                 <groupId>org.mapstruct</groupId>
                 <artifactId>mapstruct</artifactId>
                 <version>${mapstruct.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.testcontainers</groupId>
+                <artifactId>postgresql</artifactId>
+                <version>${postgresql-testcontainers.version}</version>
+                <scope>test</scope>
             </dependency>
 
             <!-- Project dependencies -->

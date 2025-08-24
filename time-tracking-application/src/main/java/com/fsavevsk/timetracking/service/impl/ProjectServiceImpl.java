@@ -1,5 +1,6 @@
 package com.fsavevsk.timetracking.service.impl;
 
+import com.fsavevsk.timetracking.api.dto.CreateProject;
 import com.fsavevsk.timetracking.api.exception.NotFoundException;
 import com.fsavevsk.timetracking.api.mapper.ProjectMapper;
 import com.fsavevsk.timetracking.api.dto.Project;
@@ -20,7 +21,7 @@ public class ProjectServiceImpl implements ProjectService {
     private final ProjectMapper projectMapper;
 
     @Override
-    public Project createProject(Project project) {
+    public Project createProject(CreateProject project) {
         ProjectEntity saved = projectRepository.save(projectMapper.toEntity(project));
         return projectMapper.toDomain(saved);
     }
@@ -36,7 +37,7 @@ public class ProjectServiceImpl implements ProjectService {
     @Override
     public Project findProjectByName(String name) {
         ProjectEntity project = projectRepository.findProjectByName(name)
-                .orElseThrow(() -> new NotFoundException("Project with name " + name + " not found"));
+                .orElseThrow(() -> new NotFoundException("Project not found"));
         return projectMapper.toDomain(project);
     }
 

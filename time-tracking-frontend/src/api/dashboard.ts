@@ -1,19 +1,19 @@
 import api from './apiClient';
-import type { AdminOverviewResponse, ProjectSummaryRow } from '@/types';
+import type { OverviewReportResponse, ProjectsReportResponse } from '@/types';
 
-export async function fetchAdminOverview(tz?: string): Promise<AdminOverviewResponse> {
-    const { data } = await api.get<AdminOverviewResponse>('/api/admin/overview', {
-        params: tz ? { tz } : undefined,
+export async function fetchAdminOverview(timezone?: string): Promise<OverviewReportResponse> {
+    const { data } = await api.get<OverviewReportResponse>('/api/admin/reports/overview', {
+        params: timezone ? { timezone } : undefined,
     });
     return data;
 }
 
 export async function fetchAdminProjectSummary(params?: {
-    tz?: string;
-    from?: string;
-    to?: string;
-}): Promise<ProjectSummaryRow[]> {
-    const { data } = await api.get<ProjectSummaryRow[]>('/api/admin/projects/summary', {
+    timezone?: string;
+    startDate?: string;
+    endDate?: string;
+}): Promise<ProjectsReportResponse[]> {
+    const { data } = await api.get<ProjectsReportResponse[]>('/api/admin/reports/projects', {
         params,
     });
     return data;

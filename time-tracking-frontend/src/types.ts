@@ -29,14 +29,14 @@ export interface CreateTimeEntryRequest {
     description?: string | null;
 }
 
-export interface AdminOverviewResponse {
+export interface OverviewReportResponse {
     totalProjects: number;
     hoursToday: number;
     hoursThisWeek: number;
     topProjectsThisWeek: Array<{ projectId: number; projectName: string; hours: number }>;
 }
 
-export interface ProjectSummaryRow {
+export interface ProjectsReportResponse {
     projectId: number;
     projectName: string;
     hoursWeek: number;

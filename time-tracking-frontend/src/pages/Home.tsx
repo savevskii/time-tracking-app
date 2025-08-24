@@ -37,7 +37,7 @@ export default function Home() {
                                             <Button size="lg">Admin Dashboard</Button>
                                         </Link>
                                         <Link to="/projects">
-                                            <Button size="lg" variant="outline">Manage Projects</Button>
+                                            <Button size="lg">Manage Projects</Button>
                                         </Link>
                                     </>
                                 )}

@@ -36,7 +36,7 @@ public class TimeEntryServiceImpl implements TimeEntryService {
     @Override
     public TimeEntryResponse createForCurrentUser(CreateTimeEntryRequest req) {
         if (!req.endTime().isAfter(req.startTime())) {
-            throw new IllegalArgumentException("endTime must be after startTime");
+            throw new IllegalArgumentException("Time entry end time must be after start time");
         }
         String userId = currentUser.userId();
         ProjectEntity project = projectRepo.findById(req.projectId())

@@ -2,7 +2,7 @@ package com.fsavevsk.timetracking.api.dto.admin;
 
 import java.util.List;
 
-public record AdminOverviewResponse(
+public record OverviewReportResponse(
         int totalProjects,
         double hoursToday,
         double hoursThisWeek,

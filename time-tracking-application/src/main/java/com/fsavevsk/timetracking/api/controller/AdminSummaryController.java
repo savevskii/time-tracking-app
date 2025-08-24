@@ -1,39 +1,58 @@
 package com.fsavevsk.timetracking.api.controller;
 
-import com.fsavevsk.timetracking.api.dto.admin.AdminOverviewResponse;
-import com.fsavevsk.timetracking.api.dto.admin.ProjectSummaryRow;
-import com.fsavevsk.timetracking.service.AdminSummaryService;
+import com.fsavevsk.timetracking.api.dto.admin.OverviewReportResponse;
+import com.fsavevsk.timetracking.api.dto.admin.ProjectsReportResponse;
+import com.fsavevsk.timetracking.service.AdminReportsService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.*;
 import java.util.List;
 
-@RequestMapping("/api/admin")
+@RequestMapping("/api/admin/reports")
 @RestController
 @RequiredArgsConstructor
+@Validated
 public class AdminSummaryController {
 
-    private final AdminSummaryService service;
+    private final AdminReportsService service;
 
     @GetMapping("/overview")
-    public ResponseEntity<AdminOverviewResponse> overview(
-            @RequestParam(required = false) String tz
-    ) {
-        return ResponseEntity.ok(service.overview(resolveZone(tz)));
+    public ResponseEntity<OverviewReportResponse> overview(
+            @RequestParam(name = "timezone", required = false, defaultValue = "UTC") String timezone) {
+        return ResponseEntity.ok(service.overview(resolveZone(timezone)));
     }
 
-    @GetMapping("/projects/summary")
-    public ResponseEntity<List<ProjectSummaryRow>> projectsSummary(
-            @RequestParam(required = false) String tz,
-            @RequestParam(required = false) String from, // ISO LocalDateTime (optional)
-            @RequestParam(required = false) String to    // ISO LocalDateTime (optional)
+    @GetMapping("/projects")
+    public ResponseEntity<List<ProjectsReportResponse>> projectsSummary(
+            @RequestParam(name = "timezone", required = false, defaultValue = "UTC") String timezone,
+            @RequestParam(name = "startDate", required = false)
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+            @RequestParam(name = "endDate", required = false)
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate
     ) {
-        return ResponseEntity.ok(service.projectsSummary(resolveZone(tz), from, to));
+        ZoneId zone = resolveZone(timezone);
+
+        // default window: last 30 days ending today in the given zone
+        LocalDate today = LocalDate.now(zone);
+        LocalDate from = startDate != null ? startDate : today.minusDays(29);
+        LocalDate to = endDate != null ? endDate : today;
+
+        if (to.isBefore(from)) {
+            throw new IllegalArgumentException("endDate must be on or after startDate");
+        }
+
+        return ResponseEntity.ok(service.projectsSummary(zone, from, to));
     }
 
     private ZoneId resolveZone(String tz) {
-        return (tz == null || tz.isBlank()) ? ZoneId.systemDefault() : ZoneId.of(tz);
+        try {
+            return ZoneId.of(tz);
+        } catch (Exception e) {
+            throw new IllegalArgumentException("Invalid timezone: " + tz);
+        }
     }
 }

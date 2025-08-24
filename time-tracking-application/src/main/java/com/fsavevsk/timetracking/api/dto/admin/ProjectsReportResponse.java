@@ -2,7 +2,7 @@ package com.fsavevsk.timetracking.api.dto.admin;
 
 import java.time.LocalDateTime;
 
-public record ProjectSummaryRow(
+public record ProjectsReportResponse(
         Long projectId,
         String projectName,
         double hoursWeek,

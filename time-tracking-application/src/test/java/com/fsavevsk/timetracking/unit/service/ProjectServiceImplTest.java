@@ -1,10 +1,12 @@
-package com.fsavevsk.timetracking.service.impl;
+package com.fsavevsk.timetracking.unit.service;
 
+import com.fsavevsk.timetracking.api.dto.CreateProject;
 import com.fsavevsk.timetracking.api.dto.Project;
 import com.fsavevsk.timetracking.api.exception.NotFoundException;
 import com.fsavevsk.timetracking.api.mapper.ProjectMapper;
 import com.fsavevsk.timetracking.persistence.entity.ProjectEntity;
 import com.fsavevsk.timetracking.persistence.repository.ProjectRepository;
+import com.fsavevsk.timetracking.service.impl.ProjectServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -36,7 +38,7 @@ class ProjectServiceImplTest {
     @Test
     void createProject_mapsAndReturnsSaved() {
         // given
-        Project req = domain(null, "TrackLight", "Time tracking");
+        CreateProject req = new CreateProject("TrackLight", "Time tracking");
         ProjectEntity saved = entity(1L, "TrackLight", "Time tracking");
 
         given(projectRepository.save(any(ProjectEntity.class))).willReturn(saved);
@@ -45,9 +47,9 @@ class ProjectServiceImplTest {
         Project out = service.createProject(req);
 
         // then
-        assertThat(out.getId()).isEqualTo(1L);
-        assertThat(out.getName()).isEqualTo("TrackLight");
-        assertThat(out.getDescription()).isEqualTo("Time tracking");
+        assertThat(out.id()).isEqualTo(1L);
+        assertThat(out.name()).isEqualTo("TrackLight");
+        assertThat(out.description()).isEqualTo("Time tracking");
 
         then(projectRepository).should().save(any(ProjectEntity.class));
         then(projectRepository).shouldHaveNoMoreInteractions();
@@ -67,10 +69,10 @@ class ProjectServiceImplTest {
 
         // then
         assertThat(list).hasSize(2);
-        assertThat(list.get(0).getId()).isEqualTo(1L);
-        assertThat(list.get(0).getName()).isEqualTo("TrackLight");
-        assertThat(list.get(1).getId()).isEqualTo(2L);
-        assertThat(list.get(1).getName()).isEqualTo("SolidTime");
+        assertThat(list.get(0).id()).isEqualTo(1L);
+        assertThat(list.get(0).name()).isEqualTo("TrackLight");
+        assertThat(list.get(1).id()).isEqualTo(2L);
+        assertThat(list.get(1).name()).isEqualTo("SolidTime");
 
         then(projectRepository).should().findAll();
         then(projectRepository).shouldHaveNoMoreInteractions();
@@ -86,8 +88,8 @@ class ProjectServiceImplTest {
         Project p = service.findProjectByName("TrackLight");
 
         // then
-        assertThat(p.getId()).isEqualTo(1L);
-        assertThat(p.getName()).isEqualTo("TrackLight");
+        assertThat(p.id()).isEqualTo(1L);
+        assertThat(p.name()).isEqualTo("TrackLight");
 
         then(projectRepository).should().findProjectByName("TrackLight");
         then(projectRepository).shouldHaveNoMoreInteractions();
@@ -102,7 +104,7 @@ class ProjectServiceImplTest {
         // when / then
         assertThatThrownBy(() -> service.findProjectByName("Nope"))
                 .isInstanceOf(NotFoundException.class)
-                .hasMessageContaining("Project with name Nope not found");
+                .hasMessageContaining("Project not found");
 
         then(projectRepository).should().findProjectByName("Nope");
         then(projectRepository).shouldHaveNoMoreInteractions();
@@ -144,13 +146,5 @@ class ProjectServiceImplTest {
         e.setName(name);
         e.setDescription(desc);
         return e;
-    }
-
-    private Project domain(Long id, String name, String desc) {
-        Project p = new Project();
-        p.setId(id);
-        p.setName(name);
-        p.setDescription(desc);
-        return p;
     }
 }

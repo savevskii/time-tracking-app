@@ -1,11 +1,12 @@
-package com.fsavevsk.timetracking.api.controller;
+package com.fsavevsk.timetracking.unit.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fsavevsk.timetracking.api.controller.ProjectController;
+import com.fsavevsk.timetracking.api.dto.CreateProject;
 import com.fsavevsk.timetracking.api.dto.Project;
 import com.fsavevsk.timetracking.api.exception.GlobalExceptionHandler;
 import com.fsavevsk.timetracking.api.exception.NotFoundException;
 import com.fsavevsk.timetracking.service.ProjectService;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,16 +37,11 @@ class ProjectControllerTest {
     ObjectMapper om;
 
     @Nested
-    @DisplayName("GET /api/projects")
-    class GetAll {
+    class GetAllProjectsTests {
         @Test
-        @DisplayName("returns 200 with list of projects")
-        void getAll_ok() throws Exception {
-            var p1 = sampleProject();
-            var p2 = new Project();
-            p2.setId(2L);
-            p2.setName("SolidTime");
-            p2.setDescription("Clone base");
+        void should_fetchAllProjects() throws Exception {
+            var p1 = new Project(1L, "TrackLight", "Time tracking");
+            var p2 = new Project(2L, "SolidTime", "Clone base");
 
             given(projectService.getAllProjects()).willReturn(List.of(p1, p2));
 
@@ -64,18 +60,14 @@ class ProjectControllerTest {
     }
 
     @Nested
-    @DisplayName("POST /api/projects")
-    class Create {
+    class CreateProjectTests {
         @Test
-        @DisplayName("returns 200 with created project")
-        void create_ok() throws Exception {
-            var req = new Project();
-            req.setName("TrackLight");
-            req.setDescription("Time tracking");
+        void should_createProject_WhenRequestIsValid() throws Exception {
+            var req = new CreateProject("TrackLight", "Time tracking");
 
-            var created = sampleProject(); // id populated
+            var created = new Project(1L, "TrackLight", "Time tracking");
 
-            given(projectService.createProject(any(Project.class))).willReturn(created);
+            given(projectService.createProject(any(CreateProject.class))).willReturn(created);
 
             mvc.perform(post("/api/projects")
                             .with(jwt())
@@ -87,18 +79,17 @@ class ProjectControllerTest {
                     .andExpect(jsonPath("$.name").value("TrackLight"))
                     .andExpect(jsonPath("$.description").value("Time tracking"));
 
-            then(projectService).should().createProject(any(Project.class));
+            then(projectService).should().createProject(any(CreateProject.class));
             then(projectService).shouldHaveNoMoreInteractions();
         }
     }
 
     @Nested
-    @DisplayName("GET /api/projects/search?projectName=...")
-    class SearchByName {
+    class SearchProjectByNameTests {
+
         @Test
-        @DisplayName("returns 200 with project when found")
-        void search_ok() throws Exception {
-            var found = sampleProject();
+        void should_getProjectByName() throws Exception {
+            var found = new Project(1L, "TrackLight", "Time tracking");
 
             given(projectService.findProjectByName("TrackLight")).willReturn(found);
 
@@ -115,8 +106,7 @@ class ProjectControllerTest {
         }
 
         @Test
-        @DisplayName("returns 404 when project not found")
-        void search_notFound() throws Exception {
+        void should_returnNotFound_WhenProjectNotExists() throws Exception {
             given(projectService.findProjectByName("Nope"))
                     .willThrow(new NotFoundException("Project not found"));
 
@@ -132,11 +122,9 @@ class ProjectControllerTest {
     }
 
     @Nested
-    @DisplayName("DELETE /api/projects/{projectId}")
-    class DeleteById {
+    class DeleteProjectByIdTests {
         @Test
-        @DisplayName("returns 200 when deleted")
-        void delete_ok() throws Exception {
+        void should_deleteProjectById_WhenExists() throws Exception {
             willDoNothing().given(projectService).delete(1L);
 
             mvc.perform(delete("/api/projects/{projectId}", 1L).with(jwt()))
@@ -145,13 +133,5 @@ class ProjectControllerTest {
             then(projectService).should().delete(1L);
             then(projectService).shouldHaveNoMoreInteractions();
         }
-    }
-
-    private Project sampleProject() {
-        Project p = new Project();
-        p.setId(1L);
-        p.setName("TrackLight");
-        p.setDescription("Time tracking");
-        return p;
     }
 }

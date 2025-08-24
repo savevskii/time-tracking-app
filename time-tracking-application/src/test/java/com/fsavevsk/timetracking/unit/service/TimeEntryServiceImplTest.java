@@ -1,4 +1,4 @@
-package com.fsavevsk.timetracking.service.impl;
+package com.fsavevsk.timetracking.unit.service;
 
 import com.fsavevsk.timetracking.api.dto.CreateTimeEntryRequest;
 import com.fsavevsk.timetracking.api.dto.TimeEntryResponse;
@@ -9,6 +9,7 @@ import com.fsavevsk.timetracking.persistence.entity.TimeEntryEntity;
 import com.fsavevsk.timetracking.persistence.repository.ProjectRepository;
 import com.fsavevsk.timetracking.persistence.repository.TimeEntryRepository;
 import com.fsavevsk.timetracking.security.CurrentUserService;
+import com.fsavevsk.timetracking.service.impl.TimeEntryServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -103,7 +104,7 @@ class TimeEntryServiceImplTest {
         // when / then
         assertThatThrownBy(() -> service.createForCurrentUser(req))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessageContaining("endTime must be after startTime");
+                .hasMessageContaining("Time entry end time must be after start time");
 
         then(projectRepo).shouldHaveNoInteractions();
         then(timeEntryRepo).shouldHaveNoInteractions();

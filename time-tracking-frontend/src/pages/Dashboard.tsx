@@ -1,12 +1,12 @@
 import { useEffect, useMemo, useState } from 'react';
 import { fetchAdminOverview, fetchAdminProjectSummary } from '@/api/dashboard';
-import type { AdminOverviewResponse, ProjectSummaryRow } from '@/types';
+import type { OverviewReportResponse, ProjectsReportResponse } from '@/types';
 import { Button, Input } from '@/components/ui';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from 'recharts';
 
 export default function Dashboard() {
-    const [overview, setOverview] = useState<AdminOverviewResponse | null>(null);
-    const [rows, setRows] = useState<ProjectSummaryRow[]>([]);
+    const [overview, setOverview] = useState<OverviewReportResponse | null>(null);
+    const [rows, setRows] = useState<ProjectsReportResponse[]>([]);
     const [loading, setLoading] = useState(true);
     const [err, setErr] = useState<string | null>(null);
 
@@ -21,7 +21,7 @@ export default function Dashboard() {
                 setErr(null);
                 const [ov, table] = await Promise.all([
                     fetchAdminOverview(tz),
-                    fetchAdminProjectSummary({ tz, from: from || undefined, to: to || undefined }),
+                    fetchAdminProjectSummary({ timezone: tz, startDate: from || undefined, endDate: to || undefined }),
                 ]);
                 setOverview(ov);
                 setRows(table);

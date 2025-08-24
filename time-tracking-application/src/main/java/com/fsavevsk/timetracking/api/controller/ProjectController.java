@@ -1,7 +1,9 @@
 package com.fsavevsk.timetracking.api.controller;
 
+import com.fsavevsk.timetracking.api.dto.CreateProject;
 import com.fsavevsk.timetracking.api.dto.Project;
 import com.fsavevsk.timetracking.service.ProjectService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,7 +24,7 @@ public class ProjectController {
     }
 
     @PostMapping
-    public ResponseEntity<Project> createProject(@RequestBody Project project) {
+    public ResponseEntity<Project> createProject(@Valid @RequestBody CreateProject project) {
         Project createdProject = projectService.createProject(project);
         return ResponseEntity.ok(createdProject);
     }
