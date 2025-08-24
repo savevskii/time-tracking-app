@@ -35,10 +35,10 @@ pipeline {
             }
         }
 
-        stage('Maven Build & Unit Tests') {
+        stage('Unit Tests') {
             steps {
                 script {
-                    sh "mvn -B -ntp clean install"
+                    sh "mvn -B -ntp clean test"
 
                     // Spring boot unit tests result
                     junit allowEmptyResults: true, testResults: '**/target/surefire-reports/*.xml'
@@ -57,6 +57,15 @@ pipeline {
                     // integration test results
                     junit allowEmptyResults: true, testResults: '**/target/failsafe-reports/*.xml'
                 }
+            }
+        }
+
+        stage('Package') {
+            when {
+                expression { return !IS_RELEASE }
+            }
+            steps {
+                sh "mvn -B -ntp -DskipTests package"
             }
         }
 

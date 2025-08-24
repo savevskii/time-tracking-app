@@ -138,6 +138,7 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-surefire-plugin</artifactId>
+                    <version>${maven-surefire-plugin.version}</version>
                     <configuration>
                         <excludes>
                             <exclude>**/*IT.java</exclude>
@@ -149,6 +150,7 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-failsafe-plugin</artifactId>
+                    <version>${maven-surefire-plugin.version}</version>
                     <executions>
                         <execution>
                             <id>integration-tests</id>
@@ -161,6 +163,9 @@
                                     <include>**/*IT.java</include>
                                     <include>**/*IntegrationTest.java</include>
                                 </includes>
+                                <argLine>
+                                    -javaagent:${settings.localRepository}/org/mockito/mockito-core/${mockito.version}/mockito-core-${mockito.version}.jar
+                                </argLine>
                             </configuration>
                         </execution>
                     </executions>
