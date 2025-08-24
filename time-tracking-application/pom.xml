@@ -13,6 +13,10 @@
     <description>This is the main module of the project. It contains Application.java class, that contains main method,
         necessary to run Spring Boot applications. It contains all necessary application configuration properties. </description>
 
+    <properties>
+        <skipFrontendAssets>false</skipFrontendAssets>
+    </properties>
+
     <dependencies>
         <!-- Spring Boot Starter Web -->
         <dependency>
@@ -55,6 +59,7 @@
             <groupId>com.fsavevsk</groupId>
             <artifactId>time-tracking-frontend</artifactId>
             <classifier>web-static</classifier>
+            <type>jar</type>
             <scope>runtime</scope>
         </dependency>
 
@@ -119,6 +124,7 @@
                         <phase>process-resources</phase>
                         <goals><goal>unpack</goal></goals>
                         <configuration>
+                            <skip>${skipFrontendAssets}</skip>
                             <artifactItems>
                                 <artifactItem>
                                     <groupId>com.fsavevsk</groupId>

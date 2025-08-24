@@ -36,6 +36,7 @@
         <lombok-mapstruct-binding.version>0.2.0</lombok-mapstruct-binding.version>
         <mockito.version>5.17.0</mockito.version>
         <postgresql-testcontainers.version>1.21.3</postgresql-testcontainers.version>
+        <skipITs>false</skipITs>
     </properties>
 
     <dependencies>
@@ -151,6 +152,9 @@
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-failsafe-plugin</artifactId>
                     <version>${maven-surefire-plugin.version}</version>
+                    <configuration>
+                        <skipITs>${skipITs}</skipITs>
+                    </configuration>
                     <executions>
                         <execution>
                             <id>integration-tests</id>
