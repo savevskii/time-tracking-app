@@ -5,6 +5,7 @@ import com.fsavevsk.timetracking.persistence.entity.ProjectEntity;
 import com.fsavevsk.timetracking.persistence.entity.TimeEntryEntity;
 
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 
 public class TestFactory {
 
@@ -27,8 +28,8 @@ public class TestFactory {
         timeEntryEntity.setProject(projectEntity);
         timeEntryEntity.setTitle("Test Time");
         timeEntryEntity.setDescription("Test description");
-        timeEntryEntity.setStartTime(LocalDateTime.now());
-        timeEntryEntity.setEndTime(LocalDateTime.now().plusHours(3));
+        timeEntryEntity.setStartTime(LocalDateTime.now().truncatedTo(ChronoUnit.MICROS));
+        timeEntryEntity.setEndTime(LocalDateTime.now().plusHours(3).truncatedTo(ChronoUnit.MICROS));
         timeEntryEntity.setUserId("it-user");
         return timeEntryEntity;
     }
@@ -37,8 +38,8 @@ public class TestFactory {
         return new CreateTimeEntryRequest(
                 projectId,
                 "Implement MockMvc IT",
-                LocalDateTime.now(),
-                LocalDateTime.now().plusHours(3),
+                LocalDateTime.now().truncatedTo(ChronoUnit.MICROS),
+                LocalDateTime.now().plusHours(3).truncatedTo(ChronoUnit.MICROS),
                 "End-to-end controller test"
         );
     }
