@@ -6,18 +6,21 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "project")
+@Table(name = "projects")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class ProjectEntity {
 
     @Id
+    @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "name", nullable = false, unique = true, length = 50)
     private String name;
 
+    @Column(name = "description", length = 2048)
     private String description;
 
 }

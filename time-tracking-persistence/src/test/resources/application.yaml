@@ -10,5 +10,12 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
+        default_schema: public
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: none
+  flyway:
+    enabled: true
+    clean-disabled: false
+    locations: classpath:db/migration
+    schemas: public
+    default-schema: public

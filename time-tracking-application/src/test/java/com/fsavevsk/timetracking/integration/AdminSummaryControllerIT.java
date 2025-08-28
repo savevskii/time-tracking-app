@@ -173,6 +173,7 @@ class AdminSummaryControllerIT extends AbstractIntegrationTest {
     private void saveEntry(ProjectEntity project, LocalDateTime start, int minutes) {
         TimeEntryEntity te = new TimeEntryEntity();
         te.setProject(project);
+        te.setUserId("it-user");
         te.setTitle("work");
         te.setStartTime(start);
         te.setEndTime(start.plusMinutes(minutes));

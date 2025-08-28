@@ -8,7 +8,7 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "time_entry")
+@Table(name = "time_entries")
 @Getter
 @Setter
 public class TimeEntryEntity {
@@ -22,16 +22,16 @@ public class TimeEntryEntity {
     @JoinColumn(name = "project_id")
     private ProjectEntity project;
 
-    @Column(name = "user_id")
+    @Column(name = "user_id", length = 50)
     private String userId;
 
-    @Column(name = "title")
+    @Column(name = "title", length = 100)
     private String title;
 
     @Column(name = "description")
     private String description;
 
-    @Column(name = "start_time")
+    @Column(name = "start_time", nullable = false)
     private LocalDateTime startTime;
 
     @Column(name = "end_time")
