@@ -1,0 +1,46 @@
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  create: true
+  name: ""
+
+deployment:
+  replicaCount: 1
+  image:
+    repository: docker-registry-internal.netcetera.com/fsavevsk/time-tracking-app
+    tag: "0.0.1-SNAPSHOT"
+    pullPolicy: IfNotPresent
+  podSecurityContext:
+    seccompProfile:
+      type: RuntimeDefault
+  containerSecurityContext:
+    allowPrivilegeEscalation: false
+    capabilities:
+      drop:
+        - ALL
+    seccompProfile:
+      type: RuntimeDefault
+  resources:
+    requests:
+      cpu: "250m"
+      memory: "512Mi"
+    limits:
+      memory: "1Gi"
+  livenessProbe:
+    path: /actuator/health/liveness
+    initialDelaySeconds: 30
+    periodSeconds: 10
+  readinessProbe:
+    path: /actuator/health/readiness
+    initialDelaySeconds: 20
+    periodSeconds: 5
+  envFrom: []
+  env: []
+
+service:
+  type: ClusterIP
+  port: 8080
+
+ingress:
+  enabled: false

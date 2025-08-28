@@ -5,7 +5,7 @@ spring:
     password: topsecret
   security:
     oauth2:
-      resource-server:
+      resourceserver:
         jwt:
           issuer-uri: http://localhost:8080/realms/dev
   jpa:

@@ -1,0 +1,13 @@
+ingress:
+  enabled: true
+  className: nginx
+  hosts:
+    - host: time-tracking-dev.3dss-non-prod.cloud.netcetera.com
+      paths:
+        - path: /
+          pathType: Prefix
+
+deployment:
+  envFrom:
+    - secretRef:
+        name: time-tracking-app-secrets
