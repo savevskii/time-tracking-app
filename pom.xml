@@ -22,6 +22,7 @@
     <modules>
         <module>time-tracking-frontend</module>
         <module>time-tracking-persistence</module>
+        <module>time-tracking-integration-tests</module>
         <module>time-tracking-application</module>
     </modules>
 
@@ -36,7 +37,6 @@
         <lombok-mapstruct-binding.version>0.2.0</lombok-mapstruct-binding.version>
         <mockito.version>5.17.0</mockito.version>
         <postgresql-testcontainers.version>1.21.3</postgresql-testcontainers.version>
-        <skipITs>false</skipITs>
     </properties>
 
     <dependencies>
@@ -60,11 +60,6 @@
                 <scope>import</scope>
             </dependency>
             <dependency>
-                <groupId>org.keycloak</groupId>
-                <artifactId>keycloak-admin-client</artifactId>
-                <version>${keycloak-admin-client.version}</version>
-            </dependency>
-            <dependency>
                 <groupId>org.mapstruct</groupId>
                 <artifactId>mapstruct</artifactId>
                 <version>${mapstruct.version}</version>
@@ -80,6 +75,11 @@
             <dependency>
                 <groupId>com.fsavevsk</groupId>
                 <artifactId>time-tracking-persistence</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fsavevsk</groupId>
+                <artifactId>time-tracking-integration-tests</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
@@ -152,9 +152,6 @@
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-failsafe-plugin</artifactId>
                     <version>${maven-surefire-plugin.version}</version>
-                    <configuration>
-                        <skipITs>${skipITs}</skipITs>
-                    </configuration>
                     <executions>
                         <execution>
                             <id>integration-tests</id>

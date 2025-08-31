@@ -1,21 +1,16 @@
 package com.fsavevsk.timetracking.persistence.repository;
 
-import com.fsavevsk.timetracking.persistence.PostgresTestConfig;
+import com.fsavevsk.timetracking.base.AbstractJpaIT;
 import com.fsavevsk.timetracking.persistence.entity.ProjectEntity;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.context.annotation.Import;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@DataJpaTest
-@Import(PostgresTestConfig.class)
-@Transactional
-public class ProjectRepositoryIT {
+public class ProjectRepositoryIT extends AbstractJpaIT {
 
     @Autowired
     ProjectRepository projectRepository;

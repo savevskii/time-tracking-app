@@ -8,13 +8,6 @@ spring:
       resourceserver:
         jwt:
           issuer-uri: http://localhost:8080/realms/dev
-  flyway:
-    enabled: true
-    schemas: timetracker
-    default-schema: timetracker
-    locations: classpath:db/migration
-    validate-on-migrate: true
-    out-of-order: false
   jpa:
     show-sql: true
     properties:

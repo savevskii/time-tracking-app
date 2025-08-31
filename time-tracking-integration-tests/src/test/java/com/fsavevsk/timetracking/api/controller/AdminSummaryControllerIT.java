@@ -1,17 +1,13 @@
-package com.fsavevsk.timetracking.integration;
+package com.fsavevsk.timetracking.api.controller;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fsavevsk.timetracking.api.dto.admin.OverviewReportResponse;
 import com.fsavevsk.timetracking.api.dto.admin.ProjectsReportResponse;
 import com.fsavevsk.timetracking.api.exception.ApiError;
-import com.fsavevsk.timetracking.integration.base.AbstractIntegrationTest;
+import com.fsavevsk.timetracking.base.AbstractWebIT;
 import com.fsavevsk.timetracking.persistence.entity.ProjectEntity;
 import com.fsavevsk.timetracking.persistence.entity.TimeEntryEntity;
-import com.fsavevsk.timetracking.persistence.repository.ProjectRepository;
-import com.fsavevsk.timetracking.persistence.repository.TimeEntryRepository;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Primary;
@@ -25,16 +21,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 /**
  * Controller-layer integration tests for Admin Summary API.
  */
-class AdminSummaryControllerIT extends AbstractIntegrationTest {
+class AdminSummaryControllerIT extends AbstractWebIT {
 
-    @Autowired
-    ProjectRepository projectRepository;
-    @Autowired
-    TimeEntryRepository timeEntryRepository;
+    private static final Instant FIXED_NOW = Instant.parse("2025-08-18T12:00:00Z");
 
-    // Use a fixed "now" to make week/day windows deterministic:
-    // Monday, 2025-08-18 12:00:00 UTC
-    static final Instant FIXED_NOW = Instant.parse("2025-08-18T12:00:00Z");
+    private static final String ADMIN_REPORTS_OVERVIEW_ENDPOINT = "/api/admin/reports/overview";
+    private static final String ADMIN_REPORTS_PROJECTS_ENDPOINT = "/api/admin/reports/projects";
 
     @TestConfiguration
     static class FixedClockConfig {
@@ -43,12 +35,6 @@ class AdminSummaryControllerIT extends AbstractIntegrationTest {
         Clock fixedClock() {
             return Clock.fixed(FIXED_NOW, ZoneOffset.UTC);
         }
-    }
-
-    @BeforeEach
-    void setup() {
-        timeEntryRepository.deleteAll();
-        projectRepository.deleteAll();
     }
 
     @Test

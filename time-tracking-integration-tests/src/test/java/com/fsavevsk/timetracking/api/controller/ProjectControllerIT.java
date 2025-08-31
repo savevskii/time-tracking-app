@@ -1,15 +1,12 @@
-package com.fsavevsk.timetracking.integration;
+package com.fsavevsk.timetracking.api.controller;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fsavevsk.timetracking.api.dto.CreateProject;
 import com.fsavevsk.timetracking.api.dto.Project;
 import com.fsavevsk.timetracking.api.exception.ApiError;
-import com.fsavevsk.timetracking.integration.base.AbstractIntegrationTest;
+import com.fsavevsk.timetracking.base.AbstractWebIT;
 import com.fsavevsk.timetracking.persistence.entity.ProjectEntity;
-import com.fsavevsk.timetracking.persistence.repository.ProjectRepository;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
@@ -21,15 +18,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 /**
  * Controller-layer integration tests for Projects API.
  */
-class ProjectControllerIT extends AbstractIntegrationTest {
+class ProjectControllerIT extends AbstractWebIT {
 
-    @Autowired
-    ProjectRepository projectRepository;
-
-    @BeforeEach
-    void setup() {
-        projectRepository.deleteAll();
-    }
+    private static final String PROJECTS_API_ENDPOINT = "/api/projects";
 
     @Test
     void should_listProjects() throws Exception {
@@ -144,5 +135,12 @@ class ProjectControllerIT extends AbstractIntegrationTest {
     void should_returnNotFound_whenDeleteNotExisting() throws Exception {
         // when & then
         performDeleteRequestNoContent(PROJECTS_API_ENDPOINT + "/" + 123456L, status().isNotFound());
+    }
+
+    protected ProjectEntity generateProjectEntity() {
+        ProjectEntity projectEntity = new ProjectEntity();
+        projectEntity.setName("Test Project");
+        projectEntity.setDescription("Test description");
+        return projectEntity;
     }
 }

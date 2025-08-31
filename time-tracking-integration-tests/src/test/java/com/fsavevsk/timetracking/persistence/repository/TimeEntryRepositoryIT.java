@@ -1,14 +1,12 @@
 package com.fsavevsk.timetracking.persistence.repository;
 
-import com.fsavevsk.timetracking.persistence.PostgresTestConfig;
+
+import com.fsavevsk.timetracking.base.AbstractJpaIT;
 import com.fsavevsk.timetracking.persistence.entity.ProjectEntity;
 import com.fsavevsk.timetracking.persistence.entity.TimeEntryEntity;
 import com.fsavevsk.timetracking.persistence.projection.ProjectSummaryAggregate;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.context.annotation.Import;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -16,10 +14,7 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@DataJpaTest
-@Import(PostgresTestConfig.class)
-@Transactional
-class TimeEntryRepositoryIT {
+class TimeEntryRepositoryIT extends AbstractJpaIT {
 
     @Autowired
     TimeEntryRepository timeEntryRepository;
@@ -187,3 +182,4 @@ class TimeEntryRepositoryIT {
         save(p, startIso, minutes);
     }
 }
+

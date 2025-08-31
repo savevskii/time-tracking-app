@@ -1,0 +1,13 @@
+spring:
+  datasource:
+    hikari:
+      maximum-pool-size: 5
+      minimum-idle: 0
+      idle-timeout: 10000
+      max-lifetime: 30000
+      connection-timeout: 30000
+  flyway:
+    connect-retries: 10
+    connect-retries-interval: 2s
+    clean-disabled: false
+    baseline-on-migrate: true

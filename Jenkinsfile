@@ -38,7 +38,7 @@ pipeline {
         stage('Maven Build & Unit Tests') {
             steps {
                 script {
-                    sh "mvn -B -ntp clean install -DskipITs"
+                    sh "mvn -B -ntp clean verify -DskipITs"
 
                     // Spring boot unit tests result
                     junit allowEmptyResults: true, testResults: '**/target/surefire-reports/*.xml'
@@ -52,7 +52,7 @@ pipeline {
         stage('Integration Tests') {
             steps {
                 script {
-                    sh "mvn -B -ntp failsafe:integration-test failsafe:verify"
+                    sh 'mvn -B -ntp -pl time-tracking-integration-tests -am verify'
 
                     // integration test results
                     junit allowEmptyResults: true, testResults: '**/target/failsafe-reports/*.xml'
