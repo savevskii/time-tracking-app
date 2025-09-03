@@ -13,7 +13,7 @@
     <name>Time Tracking UI</name>
 
     <properties>
-        <node.version>v22.7.0</node.version>
+        <node.version>v22.17.0</node.version>
         <vite.mode>production</vite.mode>
         <skipFrontendTests>false</skipFrontendTests>
     </properties>
@@ -74,7 +74,7 @@
                         </goals>
                         <phase>generate-resources</phase>
                         <configuration>
-                            <arguments>run build -- --mode ${vite.mode}</arguments>
+                            <arguments>run build</arguments>
                         </configuration>
                     </execution>
                     <!-- Run Unit tests with Vitest -->
