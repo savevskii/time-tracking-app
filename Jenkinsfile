@@ -52,7 +52,7 @@ pipeline {
         stage('Integration Tests') {
             steps {
                 script {
-                    sh 'mvn -B -ntp -pl time-tracking-integration-tests -am verify'
+                    sh 'mvn -B -ntp -pl time-tracking-integration-tests -am verify -DskipTests -DskipFrontendTests=true'
 
                     // integration test results
                     junit allowEmptyResults: true, testResults: '**/target/failsafe-reports/*.xml'

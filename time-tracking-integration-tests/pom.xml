@@ -16,7 +16,6 @@
         <dependency>
             <groupId>com.fsavevsk</groupId>
             <artifactId>time-tracking-application</artifactId>
-            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.postgresql</groupId>

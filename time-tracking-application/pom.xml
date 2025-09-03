@@ -91,12 +91,12 @@
                             <goal>repackage</goal>
                             <goal>build-info</goal>
                         </goals>
+                        <!-- keep the normal thin JAR as the main artifact; attach the fat JAR separately -->
+                        <configuration>
+                            <classifier>exec</classifier>
+                        </configuration>
                     </execution>
                 </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
             </plugin>
             <plugin>
                 <artifactId>maven-dependency-plugin</artifactId>

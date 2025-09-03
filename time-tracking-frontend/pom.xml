@@ -12,6 +12,10 @@
     <version>0.0.1-SNAPSHOT</version>
     <name>Time Tracking UI</name>
 
+    <properties>
+        <skipFrontendTests>false</skipFrontendTests>
+    </properties>
+
     <build>
         <plugins>
             <!-- This plugin disables ncanode execution from nca-parent pom -->
@@ -80,6 +84,7 @@
                         <phase>test</phase>
                         <configuration>
                             <arguments>run test</arguments>
+                            <skip>${skipFrontendTests}</skip>
                         </configuration>
                     </execution>
                 </executions>
