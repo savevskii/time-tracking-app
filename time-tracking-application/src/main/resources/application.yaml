@@ -1,6 +1,17 @@
 server:
   port: 9191
 
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      probes:
+        enabled: true
+      show-details: when_authorized
+
 spring:
   application:
     name: time-tracking-app
