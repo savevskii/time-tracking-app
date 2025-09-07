@@ -7,6 +7,13 @@ ingress:
         - path: /
           pathType: Prefix
 
+egress:
+  enabled: true
+  matchName:
+    - "keycloak-tt-dev.3dss-non-prod.cloud.netcetera.com"
+  ports:
+    - 443
+
 deployment:
   envFrom:
     - secretRef:
