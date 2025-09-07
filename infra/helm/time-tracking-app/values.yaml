@@ -2,8 +2,9 @@ nameOverride: ""
 fullnameOverride: ""
 
 serviceAccount:
-  create: true
+  create: false
   name: ""
+  automountServiceAccountToken: false
 
 deployment:
   replicaCount: 1

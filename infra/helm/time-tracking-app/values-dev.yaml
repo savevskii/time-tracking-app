@@ -11,3 +11,8 @@ deployment:
   envFrom:
     - secretRef:
         name: time-tracking-app-secrets
+  env:
+    - name: SPRING_DATASOURCE_URL
+      value: "jdbc:postgresql://postgres-postgresql.fsavevsk-dev.svc.cluster.local:5432/timetracking"
+    - name: SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI
+      value: "https://keycloak-tt-dev.3dss-non-prod.cloud.netcetera.com/realms/timetracking"

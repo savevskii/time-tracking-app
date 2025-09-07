@@ -20,10 +20,18 @@ spec:
         {{- include "time-tracking-app.selectorLabels" . | nindent 8 }}
     spec:
       serviceAccountName: {{ include "time-tracking-app.serviceAccountName" . }}
+      automountServiceAccountToken: {{ .Values.serviceAccount.automountServiceAccountToken }}
       {{- with .Values.deployment.podSecurityContext }}
       securityContext:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+      nodeSelector:
+        node_group: 3dss-db
+      tolerations:
+        - key: "component"
+          operator: "Equal"
+          value: "3dss-db"
+          effect: "NoSchedule"
       containers:
         - name: app
           {{- with .Values.deployment.containerSecurityContext }}
@@ -36,13 +44,20 @@ spec:
             - name: http
               containerPort: 8080
           livenessProbe:
-            httpGet: { path: {{ .Values.deployment.livenessProbe.path }}, port: 8080 }
-            initialDelaySeconds: {{ .Values.deployment.livenessProbe.initialDelaySeconds }}
-            periodSeconds: {{ .Values.deployment.livenessProbe.periodSeconds }}
+            httpGet:
+              path: /actuator/health/liveness
+              port: 8080
+            initialDelaySeconds: 30
+            periodSeconds: 5
+            timeoutSeconds: 2
+            failureThreshold: 3
           readinessProbe:
-            httpGet: { path: {{ .Values.deployment.readinessProbe.path }}, port: 8080 }
-            initialDelaySeconds: {{ .Values.deployment.readinessProbe.initialDelaySeconds }}
-            periodSeconds: {{ .Values.deployment.readinessProbe.periodSeconds }}
+            httpGet:
+              path: /actuator/health/readiness
+              port: 8080
+            periodSeconds: 5
+            timeoutSeconds: 2
+            failureThreshold: 3
           {{- if .Values.deployment.envFrom }}
           envFrom:
           {{- toYaml .Values.deployment.envFrom | nindent 12 }}
