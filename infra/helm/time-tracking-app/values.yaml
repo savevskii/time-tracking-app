@@ -15,6 +15,9 @@ deployment:
     seccompProfile:
       type: RuntimeDefault
   containerSecurityContext:
+    runAsUser: 10001
+    runAsGroup: 10001
+    runAsNonRoot: true
     allowPrivilegeEscalation: false
     capabilities:
       drop:
