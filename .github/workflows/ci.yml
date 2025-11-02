@@ -37,8 +37,10 @@ jobs:
           java-version: "21"
           cache: maven
 
-      - name: Maven Build & Unit Tests
-        run: mvn -B -ntp clean verify -DskipITs
+      - name: Maven Build & Tests
+        run: mvn -B -ntp clean verify
+        env:
+          TESTCONTAINERS_SKIP_CHECKS: "true"
 
       - name: Publish Maven test reports
         if: always()

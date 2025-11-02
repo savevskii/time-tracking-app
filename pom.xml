@@ -21,8 +21,8 @@
 
     <modules>
         <module>time-tracking-persistence</module>
-        <module>time-tracking-integration-tests</module>
         <module>time-tracking-application</module>
+        <module>time-tracking-integration-tests</module>
     </modules>
 
     <properties>
