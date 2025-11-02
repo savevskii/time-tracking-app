@@ -20,7 +20,6 @@
     <url>https://github.com/savevskii/time-tracking-app</url>
 
     <modules>
-        <module>time-tracking-frontend</module>
         <module>time-tracking-persistence</module>
         <module>time-tracking-integration-tests</module>
         <module>time-tracking-application</module>
@@ -30,7 +29,6 @@
         <java.version>21</java.version>
         <mapstruct.version>1.6.3</mapstruct.version>
         <postgresql.version>42.7.7</postgresql.version>
-        <frontend-maven-plugin.version>1.15.1</frontend-maven-plugin.version>
         <lombok.version>1.18.36</lombok.version>
         <lombok-mapstruct-binding.version>0.2.0</lombok-mapstruct-binding.version>
         <mockito.version>5.17.0</mockito.version>
@@ -75,12 +73,6 @@
             <dependency>
                 <groupId>com.fsavevsk</groupId>
                 <artifactId>time-tracking-application</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.fsavevsk</groupId>
-                <artifactId>time-tracking-frontend</artifactId>
-                <classifier>web-static</classifier>
                 <version>${project.version}</version>
             </dependency>
         </dependencies>
@@ -157,11 +149,6 @@
                             </configuration>
                         </execution>
                     </executions>
-                </plugin>
-                <plugin>
-                    <groupId>com.github.eirslett</groupId>
-                    <artifactId>frontend-maven-plugin</artifactId>
-                    <version>${frontend-maven-plugin.version}</version>
                 </plugin>
             </plugins>
         </pluginManagement>

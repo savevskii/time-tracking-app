@@ -6,7 +6,7 @@ This repository contains the implementation of the diploma thesis project:
 
 The project is a **full-stack Time Tracking application** designed to demonstrate:
 - **Modern web architecture** (Spring Boot backend + React frontend)
-- **Automated build, test, and delivery (CI/CD)** with Jenkins + Bitbucket
+- **Automated build, test, and delivery (CI/CD)** with GitHub Actions + GitOps
 - **Security with Keycloak** (OAuth2 / OIDC, JWT resource server)
 - **Infrastructure as Code & GitOps** on AWS EKS (Docker, Helm, ArgoCD)
 - **Database migrations** with Flyway and robust **integration testing** with Testcontainers
@@ -25,7 +25,7 @@ The research goal is a **reliable, fast, and secure delivery pipeline** for web 
         - `time-tracking-integration-tests` – Integration tests with Testcontainers
 
 - **Frontend**
-    - React + Vite + TypeScript + TailwindCSS
+    - React + Vite + TypeScript + TailwindCSS (maintained in the separate [`time-tracking-frontend`](https://github.com/savevskii/time-tracking-frontend) repository)
 
 - **Security**
     - Keycloak (IAM), Spring Security OAuth2 Resource Server (JWT)
@@ -39,10 +39,10 @@ The research goal is a **reliable, fast, and secure delivery pipeline** for web 
     - Ingress with AWS ALB (public and mTLS-protected paths as needed)
 
 - **CI/CD**
-    - Jenkins pipelines (Bitbucket webhooks)
+    - GitHub Actions workflows
     - Unit + integration tests (JUnit5, Mockito, Testcontainers)
     - Static code analysis (e.g., SonarQube/Checkstyle/SpotBugs)
-    - Docker image build & push (AWS ECR)
+    - Docker image build & push (GitHub Container Registry)
     - Helm deploy via ArgoCD
 
 ---
@@ -62,7 +62,6 @@ The research goal is a **reliable, fast, and secure delivery pipeline** for web 
 ### Prerequisites
 - Java 21
 - Maven 3.9+
-- Node.js 20+ and npm
 - Docker (and optionally Docker Compose)
 - PostgreSQL (local or via container)
 
@@ -72,11 +71,8 @@ The research goal is a **reliable, fast, and secure delivery pipeline** for web 
     mvn clean install
     mvn spring-boot:run
 
-### Frontend (React + Vite)
-
-    cd frontend
-    npm install
-    npm run dev
+### Frontend
+See the dedicated [`time-tracking-frontend`](https://github.com/savevskii/time-tracking-frontend) repository for setup, linting, and tests.
 
 ### Database (PostgreSQL)
 You can run a local PostgreSQL or use Compose:
@@ -128,21 +124,22 @@ Notes:
 
 ---
 
-## 🛠️ CI/CD Pipeline (Jenkins → AWS)
+## 🛠️ CI/CD Pipeline (GitHub Actions → GitOps)
 
 **Stages (typical):**
-1. Build & Unit Tests (Maven) + Frontend unit tests
-2. Integration Tests (Failsafe + Testcontainers)
-3. Static Analysis (e.g., SonarQube)
-4. Docker Build & Push (AWS ECR)
-5. Helm Release (to GitOps repo) → ArgoCD sync to EKS
+1. Backend build & unit/integration tests (`mvn -B clean verify`)
+2. Security scans (Trivy filesystem, Snyk, OWASP Dependency-Check)
+3. Docker build & push (GitHub Container Registry)
+4. Release metadata for `time-tracking-deployment` Helm chart updates (PR automation + ArgoCD sync)
+
+Frontend CI/CD runs in the separate repository and publishes its own build artefacts or container.
 
 **Maven tips:**
-- Full build without ITs:
+- Full build without integration tests:
 
   mvn -B -ntp clean install -DskipITs
 
-- Run only integration-tests module with deps:
+- Run only integration-tests module with dependencies:
 
   mvn -pl time-tracking-integration-tests -am verify
 
@@ -185,7 +182,7 @@ ArgoCD watches the Git repo containing the charts/values and syncs automatically
 ## 🧹 Code Quality
 
 - Checkstyle/SpotBugs (Java)
-- ESLint/TypeScript checks (frontend)
+- ESLint/TypeScript checks live in the frontend repository
 - SonarQube (quality gate in CI)
 - Conventional testing pyramid: fast unit tests → targeted integration tests
 
@@ -195,7 +192,7 @@ ArgoCD watches the Git repo containing the charts/values and syncs automatically
 
 - Review [`AGENTS.md`](AGENTS.md) for repository guidelines before starting new work.
 - Create feature branches from `main` (or `develop`, if used)
-- Open Bitbucket Pull Requests with:
+- Open GitHub Pull Requests with:
     - Green unit + integration tests
     - Passing quality gate
     - Clear description and scope
