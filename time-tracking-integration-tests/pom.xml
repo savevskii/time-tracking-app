@@ -71,6 +71,10 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-failsafe-plugin</artifactId>
+                <configuration>
+                    <skipITs>${skipITs}</skipITs>
+                    <skip>${skipITs}</skip>
+                </configuration>
             </plugin>
         </plugins>
     </build>
