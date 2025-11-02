@@ -3,10 +3,10 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>com.netcetera.nca-301-5.maven.pom</groupId>
-        <artifactId>nca-parent</artifactId>
-        <version>21.0</version>
-        <relativePath />
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>3.5.6</version>
+        <relativePath/>
     </parent>
 
     <groupId>com.fsavevsk</groupId>
@@ -17,7 +17,7 @@
     <name>Time Tracking Parent POM</name>
     <description>This pom is a maven aggregator that contains all application modules.</description>
 
-    <url>https://extranet.netcetera.biz/bitbucket/scm/~fsavevsk/time-tracking-app.git</url>
+    <url>https://github.com/savevskii/time-tracking-app</url>
 
     <modules>
         <module>time-tracking-frontend</module>
@@ -27,9 +27,7 @@
     </modules>
 
     <properties>
-        <nca.project.id>nca-341-2</nca.project.id>
-        <spring-boot.version>3.5.3</spring-boot.version>
-        <keycloak-admin-client.version>26.0.4</keycloak-admin-client.version>
+        <java.version>21</java.version>
         <mapstruct.version>1.6.3</mapstruct.version>
         <postgresql.version>42.7.7</postgresql.version>
         <frontend-maven-plugin.version>1.15.1</frontend-maven-plugin.version>
@@ -51,14 +49,6 @@
 
     <dependencyManagement>
         <dependencies>
-            <!-- Spring Platform Management -->
-            <dependency>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-dependencies</artifactId>
-                <version>${spring-boot.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
             <dependency>
                 <groupId>org.mapstruct</groupId>
                 <artifactId>mapstruct</artifactId>
@@ -102,7 +92,6 @@
                 <plugin>
                     <groupId>org.springframework.boot</groupId>
                     <artifactId>spring-boot-maven-plugin</artifactId>
-                    <version>${spring-boot.version}</version>
                     <configuration>
                         <excludes>
                             <exclude>
@@ -139,7 +128,6 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-surefire-plugin</artifactId>
-                    <version>${maven-surefire-plugin.version}</version>
                     <configuration>
                         <excludes>
                             <exclude>**/*IT.java</exclude>
@@ -151,7 +139,6 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-failsafe-plugin</artifactId>
-                    <version>${maven-surefire-plugin.version}</version>
                     <executions>
                         <execution>
                             <id>integration-tests</id>
@@ -181,10 +168,9 @@
     </build>
 
     <scm>
-        <connection>scm:git:https://extranet.netcetera.biz/bitbucket/scm/~fsavevsk/time-tracking-app.git</connection>
-        <developerConnection>scm:git:https://extranet.netcetera.biz/bitbucket/scm/~fsavevsk/time-tracking-app.git
-        </developerConnection>
-        <url>https://extranet.netcetera.biz/bitbucket/scm/~fsavevsk/time-tracking-app.git</url>
+        <connection>scm:git:https://github.com/savevskii/time-tracking-app.git</connection>
+        <developerConnection>scm:git:git@github.com:savevskii/time-tracking-app.git</developerConnection>
+        <url>https://github.com/savevskii/time-tracking-app</url>
         <tag>HEAD</tag>
     </scm>
 

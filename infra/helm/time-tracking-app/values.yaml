@@ -9,7 +9,7 @@ serviceAccount:
 deployment:
   replicaCount: 1
   image:
-    repository: docker-registry-internal.netcetera.com/fsavevsk/time-tracking-app
+    repository: "TBD"
     tag: "0.0.1-SNAPSHOT"
     pullPolicy: Always
   podSecurityContext:

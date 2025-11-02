@@ -193,6 +193,7 @@ ArgoCD watches the Git repo containing the charts/values and syncs automatically
 
 ## 🧭 Contributing (internal)
 
+- Review [`AGENTS.md`](AGENTS.md) for repository guidelines before starting new work.
 - Create feature branches from `main` (or `develop`, if used)
 - Open Bitbucket Pull Requests with:
     - Green unit + integration tests

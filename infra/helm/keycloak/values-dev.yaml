@@ -18,7 +18,7 @@ auth:
 
 # Keycloak behind a reverse proxy/ingress (ALB or NGINX)
 # Modern Keycloak expects explicit hostname and proxy headers.
-hostname: keycloak-tt-dev.3dss-non-prod.cloud.netcetera.com
+hostname: "TBD"
 proxyHeaders: xforwarded
 httpRelativePath: "/"
 
@@ -28,7 +28,7 @@ service:
 ingress:
   enabled: true
   ingressClassName: nginx
-  hostname: keycloak-tt-dev.3dss-non-prod.cloud.netcetera.com
+  hostname: "TBD"
   tls: false
 
 resources:

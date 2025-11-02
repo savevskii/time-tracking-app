@@ -1,4 +1,4 @@
-FROM docker-registry-mirror.netcetera.com/distroless/java21-debian12
+FROM gcr.io/distroless/java21-debian12
 
 # Set working directory
 WORKDIR /app

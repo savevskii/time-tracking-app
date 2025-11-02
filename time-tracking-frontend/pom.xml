@@ -46,15 +46,6 @@
                             <nodeVersion>${node.version}</nodeVersion>
                         </configuration>
                     </execution>
-                    <execution>
-                        <id>npm set nca repo</id>
-                        <goals>
-                            <goal>npm</goal>
-                        </goals>
-                        <configuration>
-                            <arguments>config set registry https://repo.netcetera.com/nexus/repository/public_npm</arguments>
-                        </configuration>
-                    </execution>
                     <!-- Install all project dependencies -->
                     <execution>
                         <id>npm ci</id>
