@@ -8,7 +8,7 @@ const mockAuth = {
     isAuthenticated: false,
     isAdmin: false,
     roles: [] as string[],
-    hasRole: (_: string) => false,
+    hasRole: (role: string) => (role === 'admin' ? mockAuth.isAdmin : mockAuth.roles.includes(role)),
     logout: vi.fn(),
 };
 

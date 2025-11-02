@@ -31,7 +31,6 @@ export default function Dashboard() {
                 setLoading(false);
             }
         })();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [tz, from, to]);
 
     const chartData = useMemo(

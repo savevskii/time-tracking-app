@@ -81,7 +81,7 @@ jobs:
         working-directory: time-tracking-frontend
 
       - name: Run unit tests
-        run: npm run test -- --coverage --coverage.reporter=lcov --coverage.reporter=text-summary --runInBand
+        run: npm run test -- --coverage --coverage.reporter=lcov --coverage.reporter=text-summary
         working-directory: time-tracking-frontend
         env:
           CI: "true"
@@ -111,6 +111,97 @@ jobs:
           if-no-files-found: warn
           path: time-tracking-frontend/test-results
 
+  security-scans:
+    name: Security scans
+    runs-on: ubuntu-latest
+    needs:
+      - backend-build-test
+      - frontend-quality
+    env:
+      SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+      DEPENDENCY_CHECK_API_KEY: ${{ secrets.DEPENDENCY_CHECK_API_KEY }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "21"
+          cache: maven
+
+      - name: Trivy filesystem scan
+        uses: aquasecurity/trivy-action@0.23.0
+        with:
+          scan-type: fs
+          scan-ref: .
+          severity: CRITICAL,HIGH
+          ignore-unfixed: true
+          exit-code: "1"
+          format: sarif
+          output: trivy-results.sarif
+          skip-dirs: |
+            time-tracking-frontend/node_modules
+            time-tracking-frontend/dist
+            time-tracking-frontend/coverage
+            time-tracking-frontend/node
+            time-tracking-application/target
+            time-tracking-persistence/target
+            time-tracking-integration-tests/target
+
+      - name: Upload Trivy results
+        if: always()
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: trivy-results.sarif
+
+      - name: Set up Node for Snyk
+        if: ${{ env.SNYK_TOKEN != '' }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+          cache-dependency-path: time-tracking-frontend/package-lock.json
+
+      - name: Install frontend dependencies for Snyk
+        if: ${{ env.SNYK_TOKEN != '' }}
+        run: npm ci --ignore-scripts
+        working-directory: time-tracking-frontend
+
+      - name: Set up Snyk CLI
+        if: ${{ env.SNYK_TOKEN != '' }}
+        uses: snyk/actions/setup@master
+
+      - name: Snyk Maven scan
+        if: ${{ env.SNYK_TOKEN != '' }}
+        run: snyk test --file=pom.xml --package-manager=maven --severity-threshold=high --fail-on=all
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+
+      - name: Snyk frontend scan
+        if: ${{ env.SNYK_TOKEN != '' }}
+        run: snyk test --file=time-tracking-frontend/package.json --package-manager=npm --severity-threshold=high --fail-on=all
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+
+      - name: OWASP Dependency-Check
+        uses: jeremylong/gh-action-dependency-check@v9
+        with:
+          project: time-tracking-app
+          path: .
+          format: "HTML"
+          out: dependency-check-report
+          failBuild: true
+          nvdApiKey: ${{ secrets.DEPENDENCY_CHECK_API_KEY }}
+
+      - name: Archive dependency-check report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: owasp-dependency-check-report
+          if-no-files-found: warn
+          path: dependency-check-report
 
   docker-build:
     name: Docker build & publish
@@ -118,6 +209,7 @@ jobs:
     needs:
       - backend-build-test
       - frontend-quality
+      - security-scans
     env:
       REGISTRY: ghcr.io
       IMAGE_NAME: ${{ github.repository_owner }}/time-tracking-app
@@ -158,6 +250,7 @@ jobs:
     needs:
       - backend-build-test
       - frontend-quality
+      - security-scans
       - docker-build
     steps:
       - name: Summarize required job results

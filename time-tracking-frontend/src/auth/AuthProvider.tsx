@@ -1,5 +1,6 @@
-import { createContext, useEffect, useRef, useState, type ReactNode } from 'react';
+import { useEffect, useRef, useState, type ReactNode } from 'react';
 import keycloak from "@/auth/keycloak";
+import { AuthContext, type AuthContextType } from '@/auth/AuthContext';
 import type { Role, TokenParsedMinimal } from '@/types';
 
 function extractRoles(tokenParsed: TokenParsedMinimal): Role[] {
@@ -7,17 +8,6 @@ function extractRoles(tokenParsed: TokenParsedMinimal): Role[] {
     const realmRoles = tokenParsed.realm_access?.roles ?? [];
     return realmRoles.filter((r): r is Role => r === 'admin' || r === 'user');
 }
-
-export interface AuthContextType {
-    isAuthenticated: boolean;
-    token?: string;
-    roles: Role[];
-    hasRole: (role: Role) => boolean;
-    isAdmin: boolean;
-    logout: () => void;
-}
-
-export const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -47,8 +37,17 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
     const logout = () => keycloak.logout();
 
+    const value: AuthContextType = {
+        isAuthenticated,
+        token,
+        roles,
+        hasRole,
+        isAdmin,
+        logout,
+    };
+
     return (
-        <AuthContext.Provider value={{ isAuthenticated, token, roles, hasRole, isAdmin, logout }}>
+        <AuthContext.Provider value={value}>
             {children}
         </AuthContext.Provider>
     );
