@@ -8,7 +8,7 @@
 - `infra/helm/`: Helm charts and values for the app, Keycloak, and PostgreSQL; update with config changes.
 
 ## Build, Test, and Development Commands
-- `mvn -B clean verify`: root build running compilation, unit tests, and Failsafe ITs.
+- `mvn -B clean verify`: root build running compilation, unit tests, and Failsafe ITs (set `-DskipITs` only when you explicitly want to bypass Testcontainers).
 - `mvn spring-boot:run -pl time-tracking-application -Dspring-boot.run.profiles=dev`: starts the API locally; provide PostgreSQL and Keycloak settings via env vars or profile overrides.
 
 ## Coding Style & Naming Conventions
@@ -48,13 +48,14 @@
 - Test coverage: use JaCoCo uploads sent to Codecov for PR diff reporting.
 - Helm remains the packaging mechanism in `time-tracking-deployment`; workflows will update chart values with new image tags.
 - Post-deploy smoke tests deferred for now; revisit when CD automation matures.
+- CI publishes the backend executable jar as an artifact so downstream Docker jobs can consume it without rebuilding.
 - AI agent integration points to be defined later once baseline pipelines are stable.
 
 ## GitHub Actions Workflow Design
 - `ci.yml` (PRs to `main`, pushes to `main`):
-  - Jobs: `backend-build-test` (Maven verify + JaCoCo upload), `security-scans` (Trivy fs scan, Snyk SCA, OWASP Dependency-Check), `docker-build` (buildx build; push to GHCR only on `main`), `quality-gate` (final status aggregation, uploads reports/artifacts). Each job uses caching (`actions/setup-java`) and uploads JUnit/coverage artifacts.
+  - Jobs: `backend-build-test` (Maven verify + JaCoCo upload; publishes test reports and the `time-tracking-app-exec.jar` artifact), optional `security-scans`, `docker-build` (downloads the jar artifact and buildx builds/pushes to GHCR on `main`), `quality-gate` (final status aggregation). Each job uses caching (`actions/setup-java`) and uploads JUnit/coverage artifacts.
   - Coverage upload via `codecov/codecov-action` in the backend job; PR comments disabled, rely on status checks.
-  - Secrets: `GHCR_PAT` (container push), `SNYK_TOKEN`, `CODECOV_TOKEN`, optional `TRIVY_*` if required.
+  - Secrets: `GHCR_PAT` (container push), `SNYK_TOKEN` (when security job enabled), `CODECOV_TOKEN`, optional `TRIVY_*`.
 - `release.yml` (trigger on SemVer tag + manual dispatch):
   - Re-run full build/test matrix, reuse artifacts, build and push release images with tag + `latest`.
   - Generate provenance (digest + version JSON) and upload release assets; create GitHub Release notes.
