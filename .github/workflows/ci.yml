@@ -78,7 +78,6 @@ jobs:
     runs-on: ubuntu-latest
     needs:
       - backend-build-test
-      - docker-build
     env:
       REGISTRY: ghcr.io
       IMAGE_NAME: ${{ github.repository_owner }}/time-tracking-app
