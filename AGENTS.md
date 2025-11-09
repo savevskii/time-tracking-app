@@ -4,11 +4,12 @@
 - `time-tracking-application/`: Spring Boot API; controllers/services in `src/main/java/com/fsavevsk/timetracking/**`, configuration in `.../configuration`.
 - `time-tracking-persistence/`: JPA entities, repositories, and Flyway migrations under `src/main/resources/db/migration`.
 - `time-tracking-integration-tests/`: Testcontainers suites mirroring API packages; suffix classes with `IT`.
-- Frontend now lives in the separate `time-tracking-frontend` repository; integrate via APIs rather than bundling static assets here.
-- `infra/helm/`: Helm charts and values for the app, Keycloak, and PostgreSQL; update with config changes.
+- Frontend now lives in the separate `time-tracking-app-ui` repository; integrate via APIs rather than bundling static assets here.
+- K8s helm charts and GitOps manifests are in the `time-tracking-deployment` repository.
 
 ## Build, Test, and Development Commands
-- `mvn -B clean verify`: root build running compilation, unit tests, and Failsafe ITs (set `-DskipITs` only when you explicitly want to bypass Testcontainers).
+- `mvn -B clean verify`: root build running compilation, unit tests, and Failsafe ITs.
+- `mvn -pl time-tracking-integration-tests verify`: run only the integration tests
 - `mvn spring-boot:run -pl time-tracking-application -Dspring-boot.run.profiles=dev`: starts the API locally; provide PostgreSQL and Keycloak settings via env vars or profile overrides.
 
 ## Coding Style & Naming Conventions
@@ -27,10 +28,14 @@
 - Store secrets outside Git (env vars, secret managers) and mirror new configuration in both Spring profile files and `infra/helm/time-tracking-app` values to keep GitOps deployments consistent.
 
 ## Diploma Thesis Context
-- Project underpins diploma thesis titled "Automation of the web application testing and delivery process".
-- CI now runs on GitHub Actions in this repository after migrating from Bitbucket.
+- Project underpins diploma thesis titled "Automation of the web application testing, building and delivery process".
+- CI now runs on GitHub Actions in this repository.
 - CD follows GitOps principles via Kubernetes and Argo CD using the `time-tracking-deployment` repository.
-- Exploring modern CI/CD pipelines that incorporate AI agents; primary app code lives in `time-tracking-app`.
+- Exploring modern CI/CD pipelines that incorporate AI agents.
+- Frontend app code lives in `time-tracking-app-ui`.
+- Backend app code lives in `time-tracking-app`.
+- K8s helm charts and GitOps manifests are in the `time-tracking-deployment` repository.
+
 
 ## CI/CD Pipeline Goals
 - `time-tracking-app` (CI) should trigger on PRs and pushes; run `mvn -B clean verify`, aggregate coverage, and block merges on failures.
