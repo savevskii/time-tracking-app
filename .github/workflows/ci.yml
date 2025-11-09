@@ -73,31 +73,6 @@ jobs:
           fail_ci_if_error: true
           verbose: true
 
-  security-scans:
-    name: Security & compliance scans
-    runs-on: ubuntu-latest
-    needs:
-      - backend-build-test
-    env:
-      REGISTRY: ghcr.io
-      IMAGE_NAME: ${{ github.repository_owner }}/time-tracking-app
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Run Snyk to check for vulnerabilities
-        if: ${{ secrets.SNYK_TOKEN != '' }}
-        uses: snyk/actions/maven@master
-        env:
-          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
-        with:
-          args: --severity-threshold=high --sarif-file-output=snyk.sarif
-
-      - name: Upload Snyk SARIF
-        if: ${{ always() && secrets.SNYK_TOKEN != '' }}
-        uses: github/codeql-action/upload-sarif@v3
-        with:
-          sarif_file: snyk.sarif
-
   docker-build:
     name: Docker build & publish
     runs-on: ubuntu-latest
@@ -162,14 +137,44 @@ jobs:
         with:
           sarif_file: trivy-results.sarif
 
+  security-scans:
+    name: Security & compliance scans
+    runs-on: ubuntu-latest
+    needs:
+      - backend-build-test
+    env:
+      REGISTRY: ghcr.io
+      IMAGE_NAME: ${{ github.repository_owner }}/time-tracking-app
+      SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Run Snyk to check for vulnerabilities
+        if: ${{ env.SNYK_TOKEN != '' }}
+        uses: snyk/actions/maven@master
+        env:
+          SNYK_TOKEN: ${{ env.SNYK_TOKEN }}
+        with:
+          args: --severity-threshold=high --sarif-file-output=snyk.sarif
+
+      - name: Upload Snyk SARIF
+        if: ${{ always() && env.SNYK_TOKEN != '' }}
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: snyk.sarif
+
+      - name: Note missing Snyk token
+        if: ${{ env.SNYK_TOKEN == '' }}
+        run: echo "SNYK_TOKEN not configured; skipping Snyk scan."
+
   quality-gate:
     name: Quality gate
     runs-on: ubuntu-latest
     if: ${{ always() }}
     needs:
       - backend-build-test
-      - security-scans
       - docker-build
+      - security-scans
     steps:
       - name: Summarize required job results
         run: |
