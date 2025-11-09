@@ -85,6 +85,7 @@ jobs:
     env:
       REGISTRY: ghcr.io
       IMAGE_NAME: ${{ github.repository }}
+      GHCR_PASSWORD: ${{ secrets.GHCR_PAT }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -99,12 +100,12 @@ jobs:
         uses: docker/setup-buildx-action@v3
 
       - name: Log in to GHCR
-        if: ${{ github.event_name != 'pull_request' && github.ref == 'refs/heads/main' }}
+        if: ${{ github.event_name != 'pull_request' && github.ref == 'refs/heads/main' && env.GHCR_PAT != '' }}
         uses: docker/login-action@v3
         with:
           registry: ${{ env.REGISTRY }}
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
+          username: ${{ github.repository_owner }}
+          password: ${{ env.GHCR_PAT }}
 
       - name: Build & Push multi-arch image
         id: build-and-push
@@ -112,7 +113,7 @@ jobs:
         with:
           context: .
           platforms: linux/amd64,linux/arm64
-          push: ${{ github.event_name != 'pull_request' && github.ref == 'refs/heads/main' }}
+          push: ${{ github.event_name != 'pull_request' && github.ref == 'refs/heads/main' && env.GHCR_PAT != '' }}
           tags: |
             ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:sha-${{ github.sha }}
             ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:main
