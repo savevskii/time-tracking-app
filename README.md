@@ -67,9 +67,11 @@ The research goal is a **reliable, fast, and secure delivery pipeline** for web 
 
 ### Backend (Spring Boot)
 
-    cd application
-    mvn clean install
-    mvn spring-boot:run
+    export SPRING_PROFILES_ACTIVE=dev
+    mvn -pl time-tracking-application clean install
+    mvn -pl time-tracking-application spring-boot:run
+
+The `dev` profile enables the local CORS configuration (`http://localhost:5173`) so the Vite frontend can call the API from another port. Skip this profile in Kubernetes/production so the backend runs without custom CORS (frontend and backend share the same host there).
 
 ### Frontend
 See the dedicated [`time-tracking-frontend`](https://github.com/savevskii/time-tracking-frontend) repository for setup, linting, and tests.
