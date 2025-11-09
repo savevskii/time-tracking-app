@@ -38,7 +38,7 @@ jobs:
           cache: maven
 
       - name: Maven Build & Tests
-        run: mvn -B -ntp clean install
+        run: mvn -B -ntp clean verify
         env:
           TESTCONTAINERS_SKIP_CHECKS: "true"
 
@@ -71,6 +71,75 @@ jobs:
           flags: backend
           fail_ci_if_error: true
           verbose: true
+
+  security-scans:
+    name: Security & compliance scans
+    runs-on: ubuntu-latest
+    needs:
+      - backend-build-test
+    env:
+      SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "21"
+          cache: maven
+
+      - name: Prepare Maven dependencies
+        run: mvn -B -ntp dependency:go-offline
+
+      - name: Snyk Open Source scan
+        if: ${{ env.SNYK_TOKEN != '' }}
+        uses: snyk/actions/maven@v3
+        with:
+          command: test
+          args: --severity-threshold=medium
+        env:
+          SNYK_TOKEN: ${{ env.SNYK_TOKEN }}
+
+      - name: Note missing Snyk token
+        if: ${{ env.SNYK_TOKEN == '' }}
+        run: |
+          echo "SNYK_TOKEN secret is not configured; skipping Snyk scan."
+          exit 1
+
+      - name: OWASP Dependency-Check
+        uses: dependency-check/Dependency-Check_Action@v4.0.3
+        with:
+          project: time-tracking-app
+          path: .
+          format: 'ALL'
+          out: reports
+          fail_on_cvss: '7'
+
+      - name: Upload Dependency-Check reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: dependency-check-reports
+          if-no-files-found: warn
+          path: reports
+
+      - name: Trivy filesystem scan
+        uses: aquasecurity/trivy-action@0.24.0
+        with:
+          scan-type: fs
+          scan-ref: .
+          severity: HIGH,CRITICAL
+          format: sarif
+          output: trivy-results.sarif
+          exit-code: '1'
+
+      - name: Upload Trivy results (SARIF)
+        if: always()
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: trivy-results.sarif
 
   docker-build:
     name: Docker build & publish
@@ -122,17 +191,20 @@ jobs:
     if: ${{ always() }}
     needs:
       - backend-build-test
+      - security-scans
       - docker-build
     steps:
       - name: Summarize required job results
         run: |
           echo "Backend job: $BACKEND_RESULT"
+          echo "Security job: $SECURITY_RESULT"
           echo "Docker job: $DOCKER_RESULT"
 
-          if [[ "$BACKEND_RESULT" != "success" || "$DOCKER_RESULT" != "success" ]]; then
+          if [[ "$BACKEND_RESULT" != "success" || "$SECURITY_RESULT" != "success" || "$DOCKER_RESULT" != "success" ]]; then
             echo "One or more required jobs failed."
             exit 1
           fi
         env:
           BACKEND_RESULT: ${{ needs.backend-build-test.result }}
+          SECURITY_RESULT: ${{ needs.security-scans.result }}
           DOCKER_RESULT: ${{ needs.docker-build.result }}
