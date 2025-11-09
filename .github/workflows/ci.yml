@@ -95,7 +95,7 @@ jobs:
 
       - name: Snyk Open Source scan
         if: ${{ env.SNYK_TOKEN != '' }}
-        uses: snyk/actions/maven@v3
+        uses: snyk/actions/maven@master
         with:
           command: test
           args: --severity-threshold=medium
@@ -109,7 +109,7 @@ jobs:
           exit 1
 
       - name: OWASP Dependency-Check
-        uses: dependency-check/Dependency-Check_Action@v4.0.3
+        uses: dependency-check/Dependency-Check_Action@main
         with:
           project: time-tracking-app
           path: .
