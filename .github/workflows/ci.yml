@@ -59,6 +59,8 @@ jobs:
           name: backend-exec-jar
           path: time-tracking-application/target/time-tracking-app-exec.jar
           if-no-files-found: error
+          retention-days: 1
+          overwrite: true
 
       - name: Set release version env variable
         id: set_version
