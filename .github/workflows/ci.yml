@@ -20,6 +20,9 @@ jobs:
   backend-build-test:
     name: Backend build & tests
     runs-on: ubuntu-latest
+    timeout-minutes: 20
+    outputs:
+      docker_tag_version: ${{ steps.set_version.outputs.docker_tag_version }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -58,8 +61,11 @@ jobs:
           if-no-files-found: error
 
       - name: Set release version env variable
+        id: set_version
         run: |
-          echo "DOCKER_TAG_VERSION=$(./mvnw help:evaluate -Dexpression=project.version -q -DforceStdout)" >> $GITHUB_ENV
+          VERSION=$(./mvnw help:evaluate -Dexpression=project.version -q -DforceStdout)
+          echo "DOCKER_TAG_VERSION=$VERSION" >> $GITHUB_ENV
+          echo "docker_tag_version=$VERSION" >> $GITHUB_OUTPUT
 
       - name: Upload JaCoCo coverage to Codecov
         if: success()
@@ -83,7 +89,7 @@ jobs:
       contents: read
       packages: write
     env:
-      REGISTRY: ghcr.io
+      IMAGE_REGISTRY: ghcr.io
       IMAGE_NAME: ${{ github.repository }}
       GHCR_PASSWORD: ${{ secrets.GHCR_PAT }}
     steps:
@@ -111,7 +117,7 @@ jobs:
       - name: Log in to GHCR
         uses: docker/login-action@v3
         with:
-          registry: ${{ env.REGISTRY }}
+          registry: ${{ env.IMAGE_REGISTRY }}
           username: ${{ github.repository_owner }}
           password: ${{ env.GHCR_PASSWORD }}
 
@@ -127,7 +133,7 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
           build-args: |
-            VERSION=${{ steps.meta.outputs.version }}
+            VERSION=${{ env.DOCKER_TAG_VERSION }}
 
       - name: Trivy image scan
         if: ${{ github.ref == 'refs/heads/main' && github.event_name != 'pull_request' }}
@@ -136,7 +142,7 @@ jobs:
           TRIVY_USERNAME: ${{ github.repository_owner }}
           TRIVY_PASSWORD: ${{ env.GHCR_PASSWORD }}
         with:
-          image-ref: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:sha-${{ github.sha }}
+          image-ref: ${{ env.IMAGE_REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.DOCKER_TAG_VERSION }}
           format: sarif
           output: trivy-results.sarif
           exit-code: '1'
@@ -165,7 +171,7 @@ jobs:
     steps:
       - uses: actions/checkout@master
       - name: Run Snyk to check for vulnerabilities
-        uses: snyk/actions/maven@v3
+        uses: snyk/actions/maven@master
         continue-on-error: true
         env:
           SNYK_TOKEN: ${{ env.SNYK_TOKEN }}
