@@ -87,6 +87,7 @@ jobs:
     permissions:
       contents: read
       packages: write
+      security-events: write
     env:
       IMAGE_REGISTRY: ghcr.io
       IMAGE_NAME: ${{ github.repository }}
