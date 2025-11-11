@@ -148,6 +148,7 @@ jobs:
           output: trivy-results.sarif
           ignore-unfixed: true
           severity: 'CRITICAL,HIGH'
+          limit-severities-for-sarif: true
 
       - name: Upload Trivy SARIF
         if: ${{ always() && github.event_name != 'pull_request' && github.ref == 'refs/heads/main' }}
