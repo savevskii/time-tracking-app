@@ -1,6 +1,6 @@
 services:
   postgres:
-    image: bitnami/postgresql:17.5.0
+    image: postgres:17-alpine
     environment:
       POSTGRES_USER: time-tracking-admin
       POSTGRES_PASSWORD: topsecret
@@ -8,19 +8,20 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - postgres_data:/bitnami/postgresql
+      - postgres_data:/var/lib/postgresql/data
 
   keycloak:
-    image: bitnami/keycloak:26.3.2
-    ports:
-      - "8080:8080"
+    image: quay.io/keycloak/keycloak:26.4
+    command: start-dev --import-realm
     environment:
-      KEYCLOAK_DATABASE_VENDOR: dev-file
-      KEYCLOAK_ADMIN_USER: admin
+      KC_DB: dev-file
+      KEYCLOAK_ADMIN: admin
       KEYCLOAK_ADMIN_PASSWORD: secret
       KEYCLOAK_EXTRA_ARGS: --import-realm
+    ports:
+      - "8080:8080"
     volumes:
-      - ./config:/opt/bitnami/keycloak/data/import
+      - ./config:/opt/keycloak/data/import
 
 volumes:
   postgres_data:
